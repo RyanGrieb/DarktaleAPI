@@ -1,26 +1,25 @@
 package com.darktale.darktaleapi.event;
 
 import com.darktale.darktaleapi.DarktaleAPI;
+import java.util.UUID;
 
 public class EventPlayerJoin implements Event {
 
-    private String playerName;
+    private String playerID;
 
-    public EventPlayerJoin(String playerName) {
-        this.playerName = playerName;
+    public EventPlayerJoin(UUID playerID) {
+        this.playerID = playerID.toString();
     }
 
     @Override
     public void execute() {
-        String message = "Welcome to darktale, " + playerName;
-        //Call on the plugin to execute a sendMessage method
-        //Bukkit.getPlayer(playerName).sendMessage("test"); <--- cant use that.
+        //Create a greeting message & put it into an event the plugin can read
+        DarktaleAPI.getAPI().eventHandler().callEvent(new EventSendPlayerMessage(playerID, "Welcome to darktale!"));
 
-        DarktaleAPI.getAPI().apiListener().callListener("apiExecuteListener");
+        //Teleport the player to a spawn location
     }
 
-    public String getPlayerName() {
-        return playerName;
+    public String getPlayerID() {
+        return playerID;
     }
-
 }

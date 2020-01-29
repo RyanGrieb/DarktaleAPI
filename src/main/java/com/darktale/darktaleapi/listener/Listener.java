@@ -1,18 +1,23 @@
 package com.darktale.darktaleapi.listener;
 
-public class Listener {
+import com.darktale.darktaleapi.event.Event;
 
-    private String name;
+/**
+ * Listeners are defined in the plugin, specifying things such as SendPlayerMessage, TeleportPlayer, ect.
+ *
+ * @author Ryan
+ */
+public abstract class Listener {
 
-    public Listener(String name) {
-        this.name = name;
+    private String listenerName;
+
+    public Listener(String listenerName) {
+        this.listenerName = listenerName;
     }
 
     public String getName() {
-        return name;
+        return listenerName;
     }
 
-    public void onCall() {
-
-    }
+    abstract public void onCall(Event event);
 }
