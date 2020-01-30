@@ -1,6 +1,6 @@
 package com.darktale.darktaleapi.event;
 
-public interface Event {
+public interface APIEvent {
 
     public void execute();
 }
