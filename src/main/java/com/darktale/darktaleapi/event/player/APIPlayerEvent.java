@@ -8,7 +8,7 @@ import com.darktale.darktaleapi.event.APIEvent;
  */
 public abstract class APIPlayerEvent implements APIEvent {
 
-    String playerID;
+    protected String playerID;
 
     public APIPlayerEvent(String playerID) {
         this.playerID = playerID;
@@ -16,7 +16,7 @@ public abstract class APIPlayerEvent implements APIEvent {
 
     @Override
     public void execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet. Did you not @Override the execute() method?");
     }
 
     public String getPlayerID() {
