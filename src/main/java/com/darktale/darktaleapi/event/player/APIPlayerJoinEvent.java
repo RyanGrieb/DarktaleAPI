@@ -2,8 +2,6 @@ package com.darktale.darktaleapi.event.player;
 
 import com.darktale.darktaleapi.DarktaleAPI;
 import com.darktale.darktaleapi.data.world.APILocation;
-import com.darktale.darktaleapi.event.APIEvent;
-import java.util.UUID;
 
 public class APIPlayerJoinEvent extends APIPlayerEvent {
 

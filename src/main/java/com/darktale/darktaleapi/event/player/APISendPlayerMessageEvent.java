@@ -1,7 +1,6 @@
 package com.darktale.darktaleapi.event.player;
 
 import com.darktale.darktaleapi.DarktaleAPI;
-import com.darktale.darktaleapi.event.APIEvent;
 
 /**
  *

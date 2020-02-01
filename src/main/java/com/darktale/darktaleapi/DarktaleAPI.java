@@ -30,8 +30,4 @@ public class DarktaleAPI {
         }
         return api;
     }
-
-    public static void main(String[] args) {
-        DarktalePlayer player = DarktalePlayer.getPlayerFromID("Rhin_");
-    }
 }

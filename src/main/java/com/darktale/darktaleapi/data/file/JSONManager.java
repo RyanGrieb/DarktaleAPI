@@ -10,7 +10,6 @@ import org.json.JSONObject;
 public class JSONManager {
 
     public static String getPlayerJSONPath(String playerID) throws Exception {
-        //TODO: Segment this out & fix redundancy
 
         //Check if the players json file exists
         FileManager.makeDirectory("resources/");
