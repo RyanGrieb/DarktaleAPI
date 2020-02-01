@@ -1,8 +1,7 @@
 package com.darktale.darktaleapi;
 
+import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import com.darktale.darktaleapi.event.EventHandler;
-import com.darktale.darktaleapi.event.player.APIPlayerJoinEvent;
-import com.darktale.darktaleapi.listener.APIListener;
 import com.darktale.darktaleapi.listener.ListenerHandler;
 
 public class DarktaleAPI {
@@ -30,5 +29,9 @@ public class DarktaleAPI {
             api = new DarktaleAPI();
         }
         return api;
+    }
+
+    public static void main(String[] args) {
+        DarktalePlayer player = DarktalePlayer.getPlayerFromID("Rhin_");
     }
 }

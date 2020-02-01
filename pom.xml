@@ -11,7 +11,26 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     
+    <dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20190722</version>
+        </dependency>
+    </dependencies>
+
+    
     <build>
         <directory>${project.basedir}/../DarktaleBukkitPlugin/lib</directory>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/</directory>
+                <includes>
+                    <include>**/*.json</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 </project>
