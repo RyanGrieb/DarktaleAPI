@@ -12,10 +12,10 @@ public class JSONManager {
     public static String getPlayerJSONPath(String playerID) throws Exception {
 
         //Check if the players json file exists
-        FileManager.makeDirectory("resources/");
-        FileManager.makeDirectory("resources/player");
+        FileManager.makeDirectory("./DarktaleConfig/");
+        FileManager.makeDirectory("./DarktaleConfig/player");
 
-        String playerJSONPath = "resources/player/" + playerID + ".json";
+        String playerJSONPath = "./DarktaleConfig/player/" + playerID + ".json";
 
         makeJSONFile(playerJSONPath);
 

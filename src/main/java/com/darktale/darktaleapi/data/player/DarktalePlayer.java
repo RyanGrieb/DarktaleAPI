@@ -30,7 +30,11 @@ public class DarktalePlayer {
         darktalePlayers.put(playerID, this);
     }
 
-    boolean isFirstTimePlayer() {
+    public String getPlayerID() {
+        return playerID;
+    }
+
+    public boolean isNew() {
         if (JSONManager.getBoolean(jsonFile, "firstTime")) {
             JSONManager.put(jsonFile, jsonFilePath, "firstTime", false);
         }

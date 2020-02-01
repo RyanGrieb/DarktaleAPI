@@ -11,10 +11,12 @@ public class APIPlayerJoinEvent extends APIPlayerEvent {
 
     @Override
     public void execute() {
-        //Create a greeting message & put it into an event the plugin can read
-        DarktaleAPI.getAPI().eventHandler().callEvent(new APISendPlayerMessageEvent(playerID, "Welcome to darktale!"));
+        //Create a first time greeting message & put it into an event the plugin can read
+        if (player.isNew()) {
+            DarktaleAPI.getAPI().eventHandler().callEvent(new APISendPlayerMessageEvent(player.getPlayerID(), "Welcome to darktale!"));
 
-        //Teleport the player to a spawn location. TODO: Load spawn location from config
-        DarktaleAPI.getAPI().eventHandler().callEvent(new APITeleportPlayerEvent(playerID, new APILocation(75, 69, 75)));
+            //Teleport the player to a spawn location. TODO: Load spawn location from config
+            DarktaleAPI.getAPI().eventHandler().callEvent(new APITeleportPlayerEvent(player.getPlayerID(), new APILocation(75, 69, 75)));
+        }
     }
 }

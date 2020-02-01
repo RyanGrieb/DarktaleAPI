@@ -1,5 +1,6 @@
 package com.darktale.darktaleapi.event.player;
 
+import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import com.darktale.darktaleapi.event.APIEvent;
 
 /**
@@ -8,10 +9,10 @@ import com.darktale.darktaleapi.event.APIEvent;
  */
 public abstract class APIPlayerEvent implements APIEvent {
 
-    protected String playerID;
+    protected DarktalePlayer player;
 
     public APIPlayerEvent(String playerID) {
-        this.playerID = playerID;
+        this.player = DarktalePlayer.getPlayerFromID(playerID);
     }
 
     @Override
@@ -19,7 +20,7 @@ public abstract class APIPlayerEvent implements APIEvent {
         throw new UnsupportedOperationException("Not supported yet. Did you not @Override the execute() method?");
     }
 
-    public String getPlayerID() {
-        return playerID;
+    public DarktalePlayer getPlayer() {
+        return player;
     }
 }
