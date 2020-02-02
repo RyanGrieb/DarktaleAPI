@@ -5,7 +5,7 @@ public class EventHandler {
     public EventHandler() {
     }
 
-    public void callEvent(APIEvent event) {
-        event.execute();
+    public boolean callEvent(APIEvent event) {
+        return !(event.execute());
     }
 }

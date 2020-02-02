@@ -17,8 +17,10 @@ public class APITeleportPlayerEvent extends APIPlayerEvent {
     }
 
     @Override
-    public void execute() {
+    public boolean execute() {
         DarktaleAPI.getAPI().listenerHandler().callbackEvent(this);
+
+        return true;
     }
 
     public APILocation getLocation() {

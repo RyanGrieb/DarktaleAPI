@@ -2,5 +2,5 @@ package com.darktale.darktaleapi.event;
 
 public interface APIEvent {
 
-    public void execute();
+    public boolean execute();
 }

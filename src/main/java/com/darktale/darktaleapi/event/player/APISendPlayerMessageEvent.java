@@ -16,8 +16,9 @@ public class APISendPlayerMessageEvent extends APIPlayerEvent {
     }
 
     @Override
-    public void execute() {
+    public boolean execute() {
         DarktaleAPI.getAPI().listenerHandler().callbackEvent(this);
+        return true;
     }
 
     public String getMessage() {

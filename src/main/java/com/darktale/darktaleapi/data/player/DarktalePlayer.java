@@ -1,7 +1,9 @@
 package com.darktale.darktaleapi.data.player;
 
+import com.darktale.darktaleapi.DarktaleAPI;
 import com.darktale.darktaleapi.data.file.FileManager;
 import com.darktale.darktaleapi.data.file.JSONManager;
+import com.darktale.darktaleapi.event.player.APISendPlayerMessageEvent;
 import java.util.HashMap;
 import org.json.JSONObject;
 
@@ -28,6 +30,10 @@ public class DarktalePlayer {
         }
 
         darktalePlayers.put(playerID, this);
+    }
+
+    public void sendMessage(String message) {
+        DarktaleAPI.getAPI().eventHandler().callEvent(new APISendPlayerMessageEvent(playerID, message));
     }
 
     public String getPlayerID() {
