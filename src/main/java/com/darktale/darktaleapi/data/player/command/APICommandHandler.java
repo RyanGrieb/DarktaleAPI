@@ -1,7 +1,9 @@
 package com.darktale.darktaleapi.data.player.command;
 
+import com.darktale.darktaleapi.DarktaleAPI;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import com.darktale.darktaleapi.data.player.command.clan.ClanCommand;
+import com.darktale.darktaleapi.event.command.APIRegisterCommandEvent;
 import java.util.HashMap;
 
 /**
@@ -24,6 +26,8 @@ public class APICommandHandler {
 
     public void registerCommand(APICommand command) {
         commands.put(command.getName(), command);
+
+        DarktaleAPI.getAPI().eventHandler().callEvent(new APIRegisterCommandEvent(command));
     }
 
     public void executeCommand(DarktalePlayer player, String commandLine) {
