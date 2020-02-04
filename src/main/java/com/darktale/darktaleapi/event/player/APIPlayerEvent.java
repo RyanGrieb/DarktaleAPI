@@ -11,8 +11,8 @@ public class APIPlayerEvent implements APIEvent {
 
     protected DarktalePlayer player;
 
-    public APIPlayerEvent(String playerID) {
-        this.player = DarktalePlayer.getPlayerFromID(playerID);
+    public APIPlayerEvent(String playerID, String playerName) {
+        this.player = DarktalePlayer.getPlayer(playerID, playerName);
     }
 
     @Override

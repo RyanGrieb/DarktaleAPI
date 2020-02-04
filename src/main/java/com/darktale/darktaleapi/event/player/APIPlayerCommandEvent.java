@@ -10,8 +10,8 @@ public class APIPlayerCommandEvent extends APIPlayerEvent {
 
     private String command;
 
-    public APIPlayerCommandEvent(String playerID, String command) {
-        super(playerID);
+    public APIPlayerCommandEvent(String playerID, String playerName, String command) {
+        super(playerID, playerName);
         this.command = command;
     }
 
@@ -20,7 +20,7 @@ public class APIPlayerCommandEvent extends APIPlayerEvent {
         System.out.println("APIPlayerCommandEvent");
         DarktaleAPI.getAPI().commandHandler().executeCommand(player, command);
 
-        return false;
+        return true;
     }
 
 }

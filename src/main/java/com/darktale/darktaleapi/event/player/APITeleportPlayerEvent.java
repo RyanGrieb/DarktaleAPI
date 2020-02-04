@@ -11,8 +11,8 @@ public class APITeleportPlayerEvent extends APIPlayerEvent {
 
     private APILocation location;
 
-    public APITeleportPlayerEvent(String playerID, APILocation location) {
-        super(playerID);
+    public APITeleportPlayerEvent(String playerID, String playerName, APILocation location) {
+        super(playerID, playerName);
         this.location = location;
     }
 

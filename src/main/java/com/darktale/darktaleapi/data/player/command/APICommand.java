@@ -30,7 +30,6 @@ public abstract class APICommand {
         FileManager.makeDirectory("./DarktaleConfig/commands");
 
         //If we are a parent command with no subcommands
-        System.out.println(name + "|" + fullname);
         if (fullname.split(" ").length <= 1) {
             FileManager.makeDirectory("./DarktaleConfig/commands/" + name);
             this.jsonFilePath = "./DarktaleConfig/commands/" + name + "/" + name + ".json";

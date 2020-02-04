@@ -16,11 +16,13 @@ public class DarktalePlayer {
     private static HashMap<String, DarktalePlayer> darktalePlayers = new HashMap<String, DarktalePlayer>();
 
     private String playerID;
+    private String playerName;
     private String jsonFilePath;
     private JSONObject jsonFile;
 
-    public DarktalePlayer(String playerID) {
+    public DarktalePlayer(String playerID, String playerName) {
         this.playerID = playerID;
+        this.playerName = playerName;
 
         try {
             this.jsonFilePath = JSONManager.getPlayerJSONPath(playerID);
@@ -33,11 +35,15 @@ public class DarktalePlayer {
     }
 
     public void sendMessage(String message) {
-        DarktaleAPI.getAPI().eventHandler().callEvent(new APISendPlayerMessageEvent(playerID, message));
+        DarktaleAPI.getAPI().eventHandler().callEvent(new APISendPlayerMessageEvent(playerID, playerName, message));
     }
 
-    public String getPlayerID() {
+    public String getID() {
         return playerID;
+    }
+
+    public String getName() {
+        return playerName;
     }
 
     public boolean isNew() {
@@ -51,9 +57,9 @@ public class DarktalePlayer {
         return jsonFile.getBoolean("firstTime");
     }
 
-    public static DarktalePlayer getPlayerFromID(String playerID) {
+    public static DarktalePlayer getPlayer(String playerID, String playerName) {
         if (!darktalePlayers.containsKey(playerID)) {
-            DarktalePlayer player = new DarktalePlayer(playerID);
+            DarktalePlayer player = new DarktalePlayer(playerID, playerName);
         }
         return darktalePlayers.get(playerID);
     }

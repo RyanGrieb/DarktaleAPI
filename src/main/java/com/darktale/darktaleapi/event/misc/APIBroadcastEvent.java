@@ -1,27 +1,29 @@
-package com.darktale.darktaleapi.event.player;
+package com.darktale.darktaleapi.event.misc;
 
 import com.darktale.darktaleapi.DarktaleAPI;
+import com.darktale.darktaleapi.event.APIEvent;
 
 /**
  *
  * @author Ryan
  */
-public class APISendPlayerMessageEvent extends APIPlayerEvent {
+public class APIBroadcastEvent implements APIEvent {
 
-    private String message;
+    String message;
 
-    public APISendPlayerMessageEvent(String playerID, String playerName, String message) {
-        super(playerID, playerName);
+    public APIBroadcastEvent(String message) {
         this.message = message;
     }
 
     @Override
     public boolean execute() {
         DarktaleAPI.getAPI().listenerHandler().callbackEvent(this);
+
         return true;
     }
 
     public String getMessage() {
         return message;
     }
+
 }

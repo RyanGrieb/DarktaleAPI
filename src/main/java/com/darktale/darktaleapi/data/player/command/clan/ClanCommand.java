@@ -1,7 +1,9 @@
 package com.darktale.darktaleapi.data.player.command.clan;
 
+import com.darktale.darktaleapi.DarktaleAPI;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import com.darktale.darktaleapi.data.player.command.APICommand;
+import com.darktale.darktaleapi.event.misc.APIBroadcastEvent;
 
 /**
  *
@@ -40,12 +42,12 @@ public class ClanCommand extends APICommand {
         @Override
         public void execute(DarktalePlayer player, String[] arguments) {
             if (arguments.length <= 2) {
-                player.sendMessage("Error: No clan name argument");
+                player.sendMessage("Error: No clan name specified");
                 printHelp(player);
                 return;
             }
 
-            player.sendMessage("Created " + arguments[2]);
+            DarktaleAPI.getAPI().eventHandler().callEvent(new APIBroadcastEvent(player.getName() + " created the clan: " + arguments[2]));
         }
     }
 
@@ -58,11 +60,12 @@ public class ClanCommand extends APICommand {
         @Override
         public void execute(DarktalePlayer player, String[] arguments) {
             if (arguments.length <= 2) {
-                player.sendMessage("Error: No clan name argument");
+                player.sendMessage("Error: No clan name specifed");
                 printHelp(player);
                 return;
             }
 
+            //TODO: Send message to all faction members
             player.sendMessage("Joined " + arguments[2]);
         }
 

@@ -66,6 +66,6 @@ public class DarktaleAPI {
         //The problem was that the command handler was calling listeners that wernt defined yet.
 
         boolean cancelled = DarktaleAPI.getAPI().eventHandler().callEvent(
-                new APIPlayerCommandEvent("Rhin_", "/clan"));
+                new APIPlayerCommandEvent("ID", "Rhin_", "/clan"));
     }
 }

@@ -5,8 +5,8 @@ import com.darktale.darktaleapi.data.world.APILocation;
 
 public class APIPlayerJoinEvent extends APIPlayerEvent {
 
-    public APIPlayerJoinEvent(String playerID) {
-        super(playerID);
+    public APIPlayerJoinEvent(String playerID, String playerName) {
+        super(playerID, playerName);
     }
 
     @Override
@@ -16,7 +16,7 @@ public class APIPlayerJoinEvent extends APIPlayerEvent {
             player.sendMessage("Welcome to darktale!");
 
             //Teleport the player to a spawn location. TODO: Load spawn location from config
-            DarktaleAPI.getAPI().eventHandler().callEvent(new APITeleportPlayerEvent(player.getPlayerID(), new APILocation(75, 69, 75)));
+            DarktaleAPI.getAPI().eventHandler().callEvent(new APITeleportPlayerEvent(player.getID(), player.getName(), new APILocation(75, 69, 75)));
         }
 
         return true;
