@@ -10,7 +10,7 @@ import com.darktale.darktaleapi.data.player.command.APICommand;
 public class ClanCommand extends APICommand {
 
     public ClanCommand() {
-        super("clan");
+        super("clan", "clan");
 
         registerSubCommand(new ClanJoin());
         registerSubCommand(new ClanCreate());
@@ -25,58 +25,45 @@ public class ClanCommand extends APICommand {
 
         if (!executeSubCommand(player, arguments[1], arguments)) {
             player.sendMessage("Error: Subcommand not found");
+            printHelp(player);
             return;
         }
 
     }
 
-    @Override
-    public void printHelp(DarktalePlayer player) {
-        //TODO: Would send a APISendPlayerMessage call displaying the command information
-        player.sendMessage("TODO: Help menu");
-    }
-
     class ClanCreate extends APICommand {
 
         public ClanCreate() {
-            super("create");
+            super("create", "clan create");
         }
 
         @Override
         public void execute(DarktalePlayer player, String[] arguments) {
             if (arguments.length <= 2) {
                 player.sendMessage("Error: No clan name argument");
+                printHelp(player);
                 return;
             }
 
             player.sendMessage("Created " + arguments[2]);
-        }
-
-        @Override
-        public void printHelp(DarktalePlayer player) {
-            player.sendMessage("TODO: Help menu");
         }
     }
 
     class ClanJoin extends APICommand {
 
         public ClanJoin() {
-            super("join");
+            super("join", "clan join");
         }
 
         @Override
         public void execute(DarktalePlayer player, String[] arguments) {
             if (arguments.length <= 2) {
                 player.sendMessage("Error: No clan name argument");
+                printHelp(player);
                 return;
             }
 
             player.sendMessage("Joined " + arguments[2]);
-        }
-
-        @Override
-        public void printHelp(DarktalePlayer player) {
-            player.sendMessage("TODO: Help menu");
         }
 
     }

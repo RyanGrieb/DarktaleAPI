@@ -35,6 +35,7 @@ public class JSONManager {
         }
     }
 
+    //TODO: Rewrite how we handler json
     public static boolean getBoolean(JSONObject json, String key) {
         if (!json.has(key)) {
             return false;

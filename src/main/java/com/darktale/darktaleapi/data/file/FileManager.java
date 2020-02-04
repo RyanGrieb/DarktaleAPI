@@ -49,4 +49,33 @@ public class FileManager {
             }
         }
     }
+
+    public static void makeFile(String filePath) {
+        File file = new File(filePath);
+
+        if (!file.isFile()) {
+            try {
+                file.createNewFile();
+                //FileManager.setFileText(filePath, "");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //Append to file:
+    /*
+
+        if (newCommandsFile) {
+            try (FileWriter fw = new FileWriter(commandsPath, true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    PrintWriter out = new PrintWriter(bw)) {
+                out.println(" " + event.getCommand().getName() + ":");
+                out.println("  description: " + event.getCommand().getDescription());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+     */
 }
