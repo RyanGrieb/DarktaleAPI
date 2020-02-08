@@ -1,13 +1,15 @@
 package com.darktale.darktaleapi.data.player;
 
+import com.darktale.darktaleapi.data.player.rank.ClanRank;
 import com.darktale.darktaleapi.DarktaleAPI;
+import com.darktale.darktaleapi.data.clan.Clan;
 import com.darktale.darktaleapi.data.file.FileManager;
 import com.darktale.darktaleapi.data.file.JSONFile;
 import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
+import com.darktale.darktaleapi.data.player.rank.StaffRank;
 import com.darktale.darktaleapi.event.player.APISendPlayerMessageEvent;
 import java.util.HashMap;
-import org.json.JSONObject;
 
 /**
  *
@@ -19,6 +21,12 @@ public class DarktalePlayer {
 
     private String playerID;
     private String playerName;
+
+    //Json variables
+    private Clan clan;
+    private ClanRank clanRank;
+    private StaffRank staffRank;
+
     private JSONFile jsonFile;
 
     public DarktalePlayer(String playerID, String playerName) {
@@ -31,11 +39,20 @@ public class DarktalePlayer {
             e.printStackTrace();
         }
 
+        //TODO: Initalize json variables
         darktalePlayers.put(playerID, this);
     }
 
     public void sendMessage(String message) {
         DarktaleAPI.getAPI().eventHandler().callEvent(new APISendPlayerMessageEvent(playerID, playerName, message));
+    }
+
+    public void setClan(Clan clan) {
+        this.clan = clan;
+    }
+
+    public void setClanRank(ClanRank clanRank) {
+        this.clanRank = clanRank;
     }
 
     public String getID() {
@@ -55,6 +72,14 @@ public class DarktalePlayer {
         }
 
         return jsonFile.getBoolean("firstTime");
+    }
+
+    public ClanRank getClanRank() {
+        return clanRank;
+    }
+
+    public Clan getClan() {
+        return clan;
     }
 
     public static DarktalePlayer getPlayer(String playerID, String playerName) {
