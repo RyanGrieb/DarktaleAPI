@@ -1,6 +1,7 @@
 package com.darktale.darktaleapi.data.player.command.clan;
 
 import com.darktale.darktaleapi.DarktaleAPI;
+import com.darktale.darktaleapi.data.clan.Clan;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import com.darktale.darktaleapi.data.player.command.APICommand;
 import com.darktale.darktaleapi.event.misc.APIBroadcastEvent;
@@ -46,8 +47,10 @@ public class ClanCommand extends APICommand {
                 printHelp(player);
                 return;
             }
+            String clanName = arguments[2];
 
-            DarktaleAPI.getAPI().eventHandler().callEvent(new APIBroadcastEvent(player.getName() + " created the clan: " + arguments[2]));
+            Clan.createClan(player, clanName);
+            DarktaleAPI.getAPI().eventHandler().callEvent(new APIBroadcastEvent(player.getName() + " created the clan: " + clanName));
         }
     }
 

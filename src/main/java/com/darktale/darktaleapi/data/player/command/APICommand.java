@@ -1,9 +1,8 @@
 package com.darktale.darktaleapi.data.player.command;
 
 import com.darktale.darktaleapi.data.file.FileManager;
-import com.darktale.darktaleapi.data.file.JSONManager;
+import com.darktale.darktaleapi.data.file.JSONFile;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
-import static com.darktale.darktaleapi.data.file.JSONManager.put;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import java.util.HashMap;
 import org.json.JSONObject;
@@ -18,8 +17,7 @@ public abstract class APICommand {
     private String name;
     private String fullname;
 
-    private String jsonFilePath;
-    private JSONObject jsonFile;
+    private JSONFile jsonFile;
 
     public APICommand(String name, String fullname) {
         this.name = name;
@@ -29,18 +27,20 @@ public abstract class APICommand {
         FileManager.makeDirectory("./DarktaleConfig/");
         FileManager.makeDirectory("./DarktaleConfig/commands");
 
+        String jsonFilepath;
+
         //If we are a parent command with no subcommands
         if (fullname.split(" ").length <= 1) {
             FileManager.makeDirectory("./DarktaleConfig/commands/" + name);
-            this.jsonFilePath = "./DarktaleConfig/commands/" + name + "/" + name + ".json";
+            jsonFilepath = "./DarktaleConfig/commands/" + name + "/" + name + ".json";
         } else {
             //TODO: Account for multiple subcommands. e.g. "/darktale clan create [NAME]"
             String parentCommandName = fullname.split(" ")[0];
-            this.jsonFilePath = "./DarktaleConfig/commands/" + parentCommandName + "/" + fullname + ".json";
+            jsonFilepath = "./DarktaleConfig/commands/" + parentCommandName + "/" + fullname + ".json";
         }
 
-        makeJSONFile(jsonFilePath);
-        this.jsonFile = new JSONObject(FileManager.readFile(jsonFilePath));
+        makeJSONFile(jsonFilepath);
+        this.jsonFile = new JSONFile(jsonFilepath);
 
     }
 
@@ -66,7 +66,7 @@ public abstract class APICommand {
         //TODO: Fix redundancy
         if (!jsonFile.has("description")) {
             jsonFile.put("description", "NONE");
-            FileManager.setFileText(jsonFilePath, jsonFile.toString());
+            FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
         }
 
         return jsonFile.getString("description");
@@ -76,7 +76,7 @@ public abstract class APICommand {
         //TODO: Fix redundancy
         if (!jsonFile.has("usage")) {
             jsonFile.put("usage", "NONE");
-            FileManager.setFileText(jsonFilePath, jsonFile.toString());
+            FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
         }
 
         return jsonFile.getString("usage");
