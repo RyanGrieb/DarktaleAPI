@@ -69,7 +69,7 @@ public class DarktaleAPI {
 
         DarktalePlayer player = new DarktalePlayer("randomid123", "rhin_");
         player.isNew();
-        // Clan.createClan(player, "coolkids");
+        Clan.createClan(player, "coolkids");
         System.out.println(player.getClan().getName());
         System.out.println(player.getClanRank().value());
     }

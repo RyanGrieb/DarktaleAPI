@@ -7,6 +7,8 @@ import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import java.util.HashMap;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -35,15 +37,38 @@ public class Clan {
     }
 
     public void addPlayer(DarktalePlayer player) {
+        if (clanPlayers.containsKey(player.getID())) {
+            player.sendMessage("Error: You're already in this clan");
+            return;
+        }
+
         player.setClan(this);
         clanPlayers.put(player.getID(), ClanRank.RECRUIT);
-        JSONManager.appendJSONObject(jsonFile, player.getClanRank().value(), "rank", player.getID(), "players", "clan");
+
+        JSONObject playerObj = new JSONObject();
+        playerObj.put("rank", ClanRank.RECRUIT.value());
+        playerObj.put("id", player.getID());
+
+        JSONManager.appendJSONToArray(jsonFile, playerObj, "players", "clan");
     }
 
     public void setClanRank(String playerID, ClanRank rank) {
         clanPlayers.replace(playerID, rank);
         DarktalePlayer player = DarktalePlayer.getPlayer(playerID);
-        JSONManager.appendJSONObject(jsonFile, player.getClanRank().value(), "rank", player.getID(), "players", "clan");
+
+        //Append to the jsonArray /w the new rank. Right now we do this manually so it's messy.
+        JSONArray array = JSONManager.getJSONArray(jsonFile, "players", "clan");
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject playerJSONObj = array.getJSONObject(i);
+            if (playerJSONObj.getString("id").equals(playerID)) {
+                playerJSONObj.put("rank", rank.value());
+                array.remove(i);
+                array.put(i, playerJSONObj);
+            }
+        }
+
+        jsonFile.getJSONObject("clan").put("players", array);
+        FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
     }
 
     public ClanRank getClanRank(String playerID) {
@@ -57,7 +82,7 @@ public class Clan {
     public static void createClan(DarktalePlayer player, String name) {
         Clan clan = new Clan(name);
         clan.addPlayer(player);
-        //player.setClanRank(ClanRank.LEADER);
+        player.setClanRank(ClanRank.LEADER);
         clans.put(clan.getName(), clan);
     }
 

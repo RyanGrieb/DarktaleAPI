@@ -1,6 +1,7 @@
 package com.darktale.darktaleapi.data.file;
 
 import java.io.File;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -57,6 +58,39 @@ public class JSONManager {
         JSONObject currentObject = getJSONObjectFromTree(jsonFile, parentObjects);
         currentObject.put(objectKey, object.toString());
         FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+    }
+
+    public static void appendJSONToArray(JSONFile jsonFile, JSONObject jsonObj, String arrayKey, String... parentObjects) {
+        if (parentObjects.length <= 0) {
+            jsonFile.getJSONArray(arrayKey).put(jsonObj);
+            FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+            return;
+        }
+
+        JSONObject currentObject = getJSONObjectFromTree(jsonFile, parentObjects);
+        if (!currentObject.has(arrayKey)) {
+            currentObject.put(arrayKey, new JSONArray());
+        }
+
+        currentObject.getJSONArray(arrayKey).put(jsonObj);
+        FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+    }
+
+    public static JSONArray getJSONArray(JSONFile jsonFile, String arrayKey, String... parentObjects) {
+        if (parentObjects.length <= 0) {
+            if (!jsonFile.has(arrayKey)) {
+                jsonFile.put(arrayKey, new JSONArray());
+            }
+            return jsonFile.getJSONArray(arrayKey);
+        }
+
+        JSONObject currentObject = getJSONObjectFromTree(jsonFile, parentObjects);
+
+        if (!currentObject.has(arrayKey)) {
+            currentObject.put(arrayKey, new JSONArray());
+        }
+
+        return currentObject.getJSONArray(arrayKey);
     }
 
     public static Object getObject(JSONFile jsonFile, String objectKey, String... parentObjects) {
