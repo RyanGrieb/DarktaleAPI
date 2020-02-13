@@ -32,6 +32,10 @@ public class Clan {
 
     private void loadJSONVariables() {
         if (JSONManager.hasObject(jsonFile, "players", "clan")) {
+            JSONArray array = JSONManager.getJSONArray(jsonFile, "players", "clan");
+            for (int i = 0; i < array.length(); i++) {
+                clanPlayers.put(array.getJSONObject(i).getString("id"), ClanRank.toRank(array.getJSONObject(i).getInt("rank")));
+            }
             //players = (ArrayList<String>) JSONManager.getObject(jsonFile, "players", "clan");
         }
     }
