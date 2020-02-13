@@ -63,18 +63,13 @@ public class DarktaleAPI {
     }
 
     public static void main(String[] args) {
-
-        //Register the api handlers
         DarktaleAPI.getAPI().setListenerHandler(new ListenerHandler());
-
         DarktaleAPI.getAPI().listenerHandler().registerListener("debugCommandListener", new DebugCommandListener());
 
         DarktaleAPI.getAPI().setEventHandler(new EventHandler());
         DarktaleAPI.getAPI().setCommandHandler(new APICommandHandler());
-        //The problem was that the command handler was calling listeners that wernt defined yet.
 
         DarktalePlayer player = new DarktalePlayer("randomid123", "rhin_");
-        player.isNew();
         //Clan.createClan(player, "coolkids");
         System.out.println(player.getClan().getName());
         System.out.println(player.getClanRank().value());

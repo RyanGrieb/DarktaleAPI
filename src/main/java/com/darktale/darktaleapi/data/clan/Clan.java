@@ -36,7 +36,6 @@ public class Clan {
             for (int i = 0; i < array.length(); i++) {
                 clanPlayers.put(array.getJSONObject(i).getString("id"), ClanRank.toRank(array.getJSONObject(i).getInt("rank")));
             }
-            //players = (ArrayList<String>) JSONManager.getObject(jsonFile, "players", "clan");
         }
     }
 

@@ -12,7 +12,7 @@ public class JSONManager {
 
     private static JSONObject getJSONObjectFromTree(JSONFile jsonFile, String... parentObjects) {
         JSONObject currentObject = null;
-        //clan,players,--->[playerID]<---
+
         int arrLength = parentObjects.length;
         if (!jsonFile.has(parentObjects[arrLength - 1])) {
             jsonFile.put(parentObjects[arrLength - 1], new JSONObject());
