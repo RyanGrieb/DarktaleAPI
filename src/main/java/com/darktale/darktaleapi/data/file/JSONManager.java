@@ -9,6 +9,25 @@ import org.json.JSONObject;
  */
 public class JSONManager {
 
+    private static JSONObject getJSONObjectFromTree(JSONFile jsonFile, String... parentObjects) {
+        JSONObject currentObject = null;
+
+        if (!jsonFile.has(parentObjects[0])) {
+            jsonFile.put(parentObjects[0], new JSONObject());
+        }
+
+        currentObject = jsonFile.getJSONObject(parentObjects[0]);
+
+        for (int i = 1; i < parentObjects.length; i++) {
+            if (!jsonFile.has(parentObjects[i])) {
+                jsonFile.put(parentObjects[0], new JSONObject());
+            }
+            currentObject = currentObject.getJSONObject(parentObjects[i]);
+        }
+
+        return currentObject;
+    }
+
     public static void makeJSONFile(String filePath) {
         File file = new File(filePath);
 
@@ -22,17 +41,33 @@ public class JSONManager {
         }
     }
 
-    //TODO: Rewrite how we handler json
-    public static boolean getBoolean(JSONObject json, String key) {
-        if (!json.has(key)) {
-            return false;
+    public static void appendJSONObject(JSONFile jsonFile, Object object, String objectKey, String... parentObjects) {
+        if (parentObjects.length <= 0) {
+            jsonFile.put(objectKey, object);
+            FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+            return;
         }
 
-        return json.getBoolean(key);
+        JSONObject currentObject = getJSONObjectFromTree(jsonFile, parentObjects);
+
+        currentObject.put(objectKey, object.toString());
+        FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
     }
 
-    public static void put(JSONObject json, String jsonPath, String key, Object object) {
-        json.put("firstTime", object);
-        FileManager.setFileText(jsonPath, json.toString());
+    public static Object getObject(JSONFile jsonFile, String objectKey, String... parentObjects) {
+        if (parentObjects.length <= 0) {
+            if (!jsonFile.has(objectKey)) {
+                jsonFile.put(objectKey, new JSONObject());
+            }
+            return jsonFile.get(objectKey);
+        }
+
+        JSONObject currentObject = getJSONObjectFromTree(jsonFile, parentObjects);
+
+        if (!currentObject.has(objectKey)) {
+            return null;
+        }
+
+        return currentObject.get(objectKey);
     }
 }

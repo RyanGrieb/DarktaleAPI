@@ -1,5 +1,7 @@
 package com.darktale.darktaleapi;
 
+import com.darktale.darktaleapi.data.clan.Clan;
+import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import com.darktale.darktaleapi.data.player.command.APICommandHandler;
 import com.darktale.darktaleapi.debug.DebugCommandListener;
 import com.darktale.darktaleapi.event.EventHandler;
@@ -65,7 +67,9 @@ public class DarktaleAPI {
         DarktaleAPI.getAPI().setCommandHandler(new APICommandHandler());
         //The problem was that the command handler was calling listeners that wernt defined yet.
 
-        boolean cancelled = DarktaleAPI.getAPI().eventHandler().callEvent(
-                new APIPlayerCommandEvent("ID", "Rhin_", "/clan"));
+        DarktalePlayer player = new DarktalePlayer("randomid123", "rhin_");
+        System.out.println("New: " + player.isNew());
+        Clan.createClan(player, "coolkids");
+
     }
 }

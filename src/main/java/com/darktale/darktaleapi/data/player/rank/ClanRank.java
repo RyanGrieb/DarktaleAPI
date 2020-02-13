@@ -21,4 +21,12 @@ public enum ClanRank {
     public int value() {
         return value;
     }
+
+    public static ClanRank toRank(int value) {
+        return ClanRank.values()[value];
+    }
+
+    public static ClanRank toRank(String value) {
+        return ClanRank.values()[Integer.valueOf(value)];
+    }
 }

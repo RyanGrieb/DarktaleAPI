@@ -10,6 +10,6 @@ import com.darktale.darktaleapi.listener.APIListener;
 public class DebugCommandListener implements APIListener {
 
     public void onAPIRegisterCommand(APIRegisterCommandEvent event) {
-        System.out.println("hello.");
+        //System.out.println("hello.");
     }
 }

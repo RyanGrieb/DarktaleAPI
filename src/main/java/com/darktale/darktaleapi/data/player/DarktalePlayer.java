@@ -39,8 +39,17 @@ public class DarktalePlayer {
             e.printStackTrace();
         }
 
-        //TODO: Initalize json variables
+        loadJSONVariables();
         darktalePlayers.put(playerID, this);
+    }
+
+    private void loadJSONVariables() {
+        //Load clan information. Drop the nullcheck eventually.
+        String clanName = (String) JSONManager.getObject(jsonFile, "name", "clan");
+        if (clanName != null) {
+            this.clan = Clan.getClan(clanName);
+            this.clanRank = ClanRank.toRank((String) JSONManager.getObject(jsonFile, "rank", "clan"));
+        }
     }
 
     public void sendMessage(String message) {
@@ -49,10 +58,13 @@ public class DarktalePlayer {
 
     public void setClan(Clan clan) {
         this.clan = clan;
+        JSONManager.appendJSONObject(jsonFile, clan.getName(), "name", "clan");
+
     }
 
     public void setClanRank(ClanRank clanRank) {
         this.clanRank = clanRank;
+        JSONManager.appendJSONObject(jsonFile, clanRank.value(), "rank", "clan");
     }
 
     public String getID() {
@@ -64,14 +76,15 @@ public class DarktalePlayer {
     }
 
     public boolean isNew() {
-        if (JSONManager.getBoolean(jsonFile, "firstTime")) {
-            JSONManager.put(jsonFile, jsonFile.getFilePath(), "firstTime", false);
-        }
-        if (!jsonFile.has("firstTime")) {
-            JSONManager.put(jsonFile, jsonFile.getFilePath(), "firstTime", true);
+        if (jsonFile.has("newPlayer")) {
+            if ((Boolean) JSONManager.getObject(jsonFile, "newPlayer")) {
+                JSONManager.appendJSONObject(jsonFile, false, "newPlayer");
+            }
+        } else if (!jsonFile.has("newPlayer")) {
+            JSONManager.appendJSONObject(jsonFile, true, "newPlayer");
         }
 
-        return jsonFile.getBoolean("firstTime");
+        return (Boolean) JSONManager.getObject(jsonFile, "newPlayer");
     }
 
     public ClanRank getClanRank() {

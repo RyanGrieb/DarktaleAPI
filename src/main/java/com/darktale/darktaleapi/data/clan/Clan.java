@@ -24,6 +24,8 @@ public class Clan {
 
         this.name = name;
         this.jsonFile = new JSONFile(getClanJSONPath(name));
+
+        //TODO: Load players hashmap from json
     }
 
     public void addPlayer(DarktalePlayer player) {
@@ -52,5 +54,14 @@ public class Clan {
         makeJSONFile(playerJSONPath);
 
         return playerJSONPath;
+    }
+
+    public static Clan getClan(String clanName) {
+        if (clanName == null) {
+            return null;
+        }
+
+        //TODO: If the clan is not in the hashmap, attempt to load it from json.
+        return clans.get(clanName);
     }
 }
