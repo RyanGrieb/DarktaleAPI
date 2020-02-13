@@ -11,20 +11,26 @@ public class JSONManager {
 
     private static JSONObject getJSONObjectFromTree(JSONFile jsonFile, String... parentObjects) {
         JSONObject currentObject = null;
-
-        if (!jsonFile.has(parentObjects[0])) {
-            jsonFile.put(parentObjects[0], new JSONObject());
+        //clan,players,--->[playerID]<---
+        int arrLength = parentObjects.length;
+        if (!jsonFile.has(parentObjects[arrLength - 1])) {
+            jsonFile.put(parentObjects[arrLength - 1], new JSONObject());
         }
 
-        currentObject = jsonFile.getJSONObject(parentObjects[0]);
+        currentObject = jsonFile.getJSONObject(parentObjects[arrLength - 1]);
+        //System.out.println("Start: " + parentObjects[arrLength - 1] + ", Length:" + arrLength);
 
-        for (int i = 1; i < parentObjects.length; i++) {
-            if (!jsonFile.has(parentObjects[i])) {
-                jsonFile.put(parentObjects[0], new JSONObject());
+        for (int i = arrLength - 2; i >= 0; i--) {
+            // System.out.println("Current: " + parentObjects[i] + "," + i);
+            if (!currentObject.has(parentObjects[i])) {
+                System.out.println(parentObjects[i + 1] + " doesnt have: " + parentObjects[i]);
+                currentObject.put(parentObjects[i], new JSONObject());
             }
             currentObject = currentObject.getJSONObject(parentObjects[i]);
         }
 
+        FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+        // System.out.println("END\n");
         return currentObject;
     }
 
@@ -49,7 +55,6 @@ public class JSONManager {
         }
 
         JSONObject currentObject = getJSONObjectFromTree(jsonFile, parentObjects);
-
         currentObject.put(objectKey, object.toString());
         FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
     }
@@ -69,5 +74,29 @@ public class JSONManager {
         }
 
         return currentObject.get(objectKey);
+    }
+
+    public static boolean hasObject(JSONFile jsonFile, String objectKey, String... parentObjects) {
+        if (parentObjects.length <= 0) {
+            if (!jsonFile.has(objectKey)) {
+                return false;
+            }
+            return true;
+        }
+
+        if (!jsonFile.has(parentObjects[0])) {
+            return false;
+        }
+
+        JSONObject currentObject = jsonFile.getJSONObject(parentObjects[0]);
+
+        for (int i = 1; i < parentObjects.length; i++) {
+            if (!currentObject.has(parentObjects[i])) {
+                return false;
+            }
+            currentObject = currentObject.getJSONObject(parentObjects[i]);
+        }
+
+        return true;
     }
 }

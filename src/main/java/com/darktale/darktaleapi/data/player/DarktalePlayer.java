@@ -24,7 +24,6 @@ public class DarktalePlayer {
 
     //Json variables
     private Clan clan;
-    private ClanRank clanRank;
     private StaffRank staffRank;
 
     private JSONFile jsonFile;
@@ -45,10 +44,8 @@ public class DarktalePlayer {
 
     private void loadJSONVariables() {
         //Load clan information. Drop the nullcheck eventually.
-        String clanName = (String) JSONManager.getObject(jsonFile, "name", "clan");
-        if (clanName != null) {
-            this.clan = Clan.getClan(clanName);
-            this.clanRank = ClanRank.toRank((String) JSONManager.getObject(jsonFile, "rank", "clan"));
+        if (JSONManager.hasObject(jsonFile, "clan")) {
+            this.clan = Clan.getClan((String) JSONManager.getObject(jsonFile, "name", "clan"));
         }
     }
 
@@ -63,8 +60,8 @@ public class DarktalePlayer {
     }
 
     public void setClanRank(ClanRank clanRank) {
-        this.clanRank = clanRank;
-        JSONManager.appendJSONObject(jsonFile, clanRank.value(), "rank", "clan");
+        this.getClan().setClanRank(playerID, clanRank);
+        //JSONManager.appendJSONObject(jsonFile, clanRank.value(), "rank", "clan");
     }
 
     public String getID() {
@@ -75,20 +72,20 @@ public class DarktalePlayer {
         return playerName;
     }
 
+    public ClanRank getClanRank() {
+        return clan.getClanRank(playerID);
+    }
+
     public boolean isNew() {
-        if (jsonFile.has("newPlayer")) {
+        if (JSONManager.hasObject(jsonFile, "newPlayer")) {
             if ((Boolean) JSONManager.getObject(jsonFile, "newPlayer")) {
                 JSONManager.appendJSONObject(jsonFile, false, "newPlayer");
             }
-        } else if (!jsonFile.has("newPlayer")) {
+        } else if (!JSONManager.hasObject(jsonFile, "newPlayer")) {
             JSONManager.appendJSONObject(jsonFile, true, "newPlayer");
         }
 
         return (Boolean) JSONManager.getObject(jsonFile, "newPlayer");
-    }
-
-    public ClanRank getClanRank() {
-        return clanRank;
     }
 
     public Clan getClan() {
@@ -99,6 +96,10 @@ public class DarktalePlayer {
         if (!darktalePlayers.containsKey(playerID)) {
             DarktalePlayer player = new DarktalePlayer(playerID, playerName);
         }
+        return darktalePlayers.get(playerID);
+    }
+
+    public static DarktalePlayer getPlayer(String playerID) {
         return darktalePlayers.get(playerID);
     }
 

@@ -68,8 +68,9 @@ public class DarktaleAPI {
         //The problem was that the command handler was calling listeners that wernt defined yet.
 
         DarktalePlayer player = new DarktalePlayer("randomid123", "rhin_");
-        System.out.println("New: " + player.isNew());
-        Clan.createClan(player, "coolkids");
-
+        player.isNew();
+        // Clan.createClan(player, "coolkids");
+        System.out.println(player.getClan().getName());
+        System.out.println(player.getClanRank().value());
     }
 }
