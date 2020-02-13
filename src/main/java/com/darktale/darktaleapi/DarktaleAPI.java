@@ -3,21 +3,23 @@ package com.darktale.darktaleapi;
 import com.darktale.darktaleapi.data.clan.Clan;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import com.darktale.darktaleapi.data.player.command.APICommandHandler;
+import com.darktale.darktaleapi.data.serverconfig.ServerConfig;
 import com.darktale.darktaleapi.debug.DebugCommandListener;
 import com.darktale.darktaleapi.event.EventHandler;
-import com.darktale.darktaleapi.event.player.APIPlayerCommandEvent;
 import com.darktale.darktaleapi.listener.ListenerHandler;
 
 public class DarktaleAPI {
 
     private static DarktaleAPI api;
 
+    private ServerConfig serverConfig;
+
     private ListenerHandler listenerHandler;
     private EventHandler eventHandler;
     private APICommandHandler commandHandler;
 
     public DarktaleAPI() {
-
+        this.serverConfig = new ServerConfig();
     }
 
     public void setListenerHandler(ListenerHandler listenerHandler) {
@@ -30,6 +32,10 @@ public class DarktaleAPI {
 
     public void setCommandHandler(APICommandHandler commandHandler) {
         this.commandHandler = commandHandler;
+    }
+
+    public ServerConfig getServerConfig() {
+        return serverConfig;
     }
 
     public EventHandler eventHandler() {
@@ -69,8 +75,10 @@ public class DarktaleAPI {
 
         DarktalePlayer player = new DarktalePlayer("randomid123", "rhin_");
         player.isNew();
-        Clan.createClan(player, "coolkids");
+        //Clan.createClan(player, "coolkids");
         System.out.println(player.getClan().getName());
         System.out.println(player.getClanRank().value());
+
+        System.out.println(DarktaleAPI.getAPI().getServerConfig().getSpawnLocation().getY());
     }
 }
