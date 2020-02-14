@@ -6,6 +6,7 @@ import com.darktale.darktaleapi.data.file.JSONFile;
 import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.json.JSONArray;
@@ -100,6 +101,10 @@ public class Clan {
         return name;
     }
 
+    public HashMap<String, ClanRank> getClanPlayers() {
+        return clanPlayers;
+    }
+
     public ArrayList<String> getInvitedPlayers() {
         return invitedPlayers;
     }
@@ -110,13 +115,6 @@ public class Clan {
         clan.addPlayer(player);
         player.setClanRank(ClanRank.LEADER);
         clans.put(clan.getName(), clan);
-    }
-
-    public static Clan createClan(String name) {
-        Clan clan = new Clan(name);
-        clans.put(clan.getName(), clan);
-
-        return clan;
     }
 
     private static String getClanJSONPath(String clanName) {
@@ -134,6 +132,11 @@ public class Clan {
     public static Clan getClan(String clanName) {
         if (clanName == null) {
             return null;
+        }
+
+        if (!clans.containsKey(clanName) && new File("./DarktaleConfig/clan/" + clanName + ".json").isFile()) {
+            Clan clan = new Clan(clanName);
+            clans.put(clan.getName(), clan);
         }
 
         return clans.get(clanName);

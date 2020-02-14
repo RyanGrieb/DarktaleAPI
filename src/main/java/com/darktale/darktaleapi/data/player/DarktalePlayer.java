@@ -47,14 +47,13 @@ public class DarktalePlayer {
         darktalePlayers.put(playerID, this);
 
         //Set the players prefix/nickname
-        String playerPrefix = ((clan != null) ? "[" + clan.getName() + "]" : "[]") + " " + playerName;
-        DarktaleAPI.getAPI().eventHandler().callEvent(new APISetPlayerNicknameEvent(playerID, playerName, playerPrefix));
+        updatePrefix();
     }
 
     private void loadJSONVariables() {
         //Load clan information. Drop the nullcheck eventually.
         if (JSONManager.hasObject(jsonFile, "clan")) {
-            this.clan = Clan.createClan((String) JSONManager.getObject(jsonFile, "name", "clan"));
+            this.clan = Clan.getClan((String) JSONManager.getObject(jsonFile, "name", "clan"));
         }
     }
 
@@ -70,10 +69,19 @@ public class DarktalePlayer {
         DarktaleAPI.getAPI().eventHandler().callEvent(new APISendPlayerMessageEvent(playerID, playerName, message));
     }
 
+    public void updatePrefix() {
+        String playerPrefix = ((clan != null) ? "[" + clan.getName() + "]" : "[]") + " " + playerName;
+        setNickname(playerPrefix);
+    }
+
+    public void setNickname(String nickname) {
+        DarktaleAPI.getAPI().eventHandler().callEvent(new APISetPlayerNicknameEvent(playerID, playerName, nickname));
+    }
+
     public void setClan(Clan clan) {
         this.clan = clan;
         JSONManager.appendJSONObject(jsonFile, clan.getName(), "name", "clan");
-
+        updatePrefix();
     }
 
     public void setClanRank(ClanRank clanRank) {

@@ -96,7 +96,6 @@ public class ClanCommand extends APICommand {
             }
 
             player.sendMessage("Joined " + arguments[2]);
-
         }
 
     }
@@ -133,6 +132,11 @@ public class ClanCommand extends APICommand {
 
             if (player.getClan().getInvitedPlayers().contains(invitedPlayer.getID())) {
                 player.sendMessage("Error: You already invited " + invitedPlayer.getName() + " to the clan");
+                return;
+            }
+
+            if (player.getClan().getClanPlayers().keySet().contains(invitedPlayer.getID())) {
+                player.sendMessage("Error: " + invitedPlayer.getName() + " is already in the clan");
                 return;
             }
 
