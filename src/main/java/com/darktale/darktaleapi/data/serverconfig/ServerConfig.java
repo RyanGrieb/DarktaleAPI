@@ -27,11 +27,17 @@ public class ServerConfig {
             JSONManager.appendJSONObject(jsonFile, 0, "z", "spawnLocation");
         }
 
-        int x = Integer.parseInt((String) JSONManager.getObject(jsonFile, "x", "spawnLocation"));
-        int y = Integer.parseInt((String) JSONManager.getObject(jsonFile, "y", "spawnLocation"));
-        int z = Integer.parseInt((String) JSONManager.getObject(jsonFile, "z", "spawnLocation"));
+        double x = Double.parseDouble((String) JSONManager.getObject(jsonFile, "x", "spawnLocation"));
+        double y = Double.parseDouble((String) JSONManager.getObject(jsonFile, "y", "spawnLocation"));
+        double z = Double.parseDouble((String) JSONManager.getObject(jsonFile, "z", "spawnLocation"));
 
         spawnLocation = new APILocation(x, y, z);
+    }
+
+    public void setSpawnLocation(APILocation location) {
+        JSONManager.appendJSONObject(jsonFile, location.getX(), "x", "spawnLocation");
+        JSONManager.appendJSONObject(jsonFile, location.getY(), "y", "spawnLocation");
+        JSONManager.appendJSONObject(jsonFile, location.getZ(), "z", "spawnLocation");
     }
 
     public APILocation getSpawnLocation() {

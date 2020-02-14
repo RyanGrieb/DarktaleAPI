@@ -3,6 +3,7 @@ package com.darktale.darktaleapi.data.player.command;
 import com.darktale.darktaleapi.DarktaleAPI;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import com.darktale.darktaleapi.data.player.command.clan.ClanCommand;
+import com.darktale.darktaleapi.data.player.command.serverconfig.SetSpawnCommand;
 import com.darktale.darktaleapi.event.command.APIRegisterCommandEvent;
 import java.util.HashMap;
 
@@ -22,6 +23,7 @@ public class APICommandHandler {
         commands = new HashMap<String, APICommand>();
 
         registerCommand(new ClanCommand());
+        registerCommand(new SetSpawnCommand());
     }
 
     public void registerCommand(APICommand command) {

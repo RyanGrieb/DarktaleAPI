@@ -6,6 +6,7 @@ import com.darktale.darktaleapi.data.player.command.APICommandHandler;
 import com.darktale.darktaleapi.data.serverconfig.ServerConfig;
 import com.darktale.darktaleapi.debug.DebugCommandListener;
 import com.darktale.darktaleapi.event.EventHandler;
+import com.darktale.darktaleapi.event.player.APIPlayerCommandEvent;
 import com.darktale.darktaleapi.listener.ListenerHandler;
 
 public class DarktaleAPI {
@@ -70,9 +71,6 @@ public class DarktaleAPI {
         DarktaleAPI.getAPI().setCommandHandler(new APICommandHandler());
 
         DarktalePlayer player = new DarktalePlayer("randomid123", "rhin_");
-        //Clan.createClan(player, "coolkids");
-        System.out.println(player.getClan().getName());
-        System.out.println(player.getClanRank().value());
 
         System.out.println(DarktaleAPI.getAPI().getServerConfig().getSpawnLocation().getY());
     }

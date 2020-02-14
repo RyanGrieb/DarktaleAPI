@@ -20,6 +20,9 @@ public class APITeleportPlayerEvent extends APIPlayerEvent {
     public boolean execute() {
         DarktaleAPI.getAPI().listenerHandler().callbackEvent(this);
 
+        //Update the players location
+        DarktaleAPI.getAPI().eventHandler().callEvent(new APIRequestPlayerLocationEvent(player.getID(), player.getName()));
+
         return true;
     }
 

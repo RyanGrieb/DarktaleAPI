@@ -15,6 +15,7 @@ public class ListenerHandler {
         apiListeners = new HashMap<String, APIListenerWrapper>();
     }
 
+    //The callbackEvent method basically tells the Bukkit/Hytale plugin to call their listener.
     public void callbackEvent(APIEvent event) {
         for (APIListenerWrapper listeners : apiListeners.values()) {
             listeners.onEventCall(event);

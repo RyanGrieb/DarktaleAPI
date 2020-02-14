@@ -8,7 +8,10 @@ import com.darktale.darktaleapi.data.file.JSONFile;
 import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.rank.StaffRank;
+import com.darktale.darktaleapi.data.world.APILocation;
+import com.darktale.darktaleapi.event.player.APIRequestPlayerLocationEvent;
 import com.darktale.darktaleapi.event.player.APISendPlayerMessageEvent;
+import com.darktale.darktaleapi.event.player.APITeleportPlayerEvent;
 import java.util.HashMap;
 
 /**
@@ -21,6 +24,8 @@ public class DarktalePlayer {
 
     private String playerID;
     private String playerName;
+
+    private APILocation location;
 
     //Json variables
     private Clan clan;
@@ -49,6 +54,14 @@ public class DarktalePlayer {
         }
     }
 
+    public void updateLocation(APILocation location) {
+        this.location = location;
+    }
+
+    public void teleport(APILocation location) {
+        DarktaleAPI.getAPI().eventHandler().callEvent(new APITeleportPlayerEvent(playerID, playerName, location));
+    }
+
     public void sendMessage(String message) {
         DarktaleAPI.getAPI().eventHandler().callEvent(new APISendPlayerMessageEvent(playerID, playerName, message));
     }
@@ -62,6 +75,10 @@ public class DarktalePlayer {
     public void setClanRank(ClanRank clanRank) {
         this.getClan().setClanRank(playerID, clanRank);
         //JSONManager.appendJSONObject(jsonFile, clanRank.value(), "rank", "clan");
+    }
+
+    public APILocation getLocation() {
+        return location;
     }
 
     public String getID() {
