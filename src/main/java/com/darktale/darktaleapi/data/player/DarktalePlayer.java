@@ -9,8 +9,8 @@ import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.rank.StaffRank;
 import com.darktale.darktaleapi.data.world.APILocation;
-import com.darktale.darktaleapi.event.player.APIRequestPlayerLocationEvent;
 import com.darktale.darktaleapi.event.player.APISendPlayerMessageEvent;
+import com.darktale.darktaleapi.event.player.APISetPlayerNicknameEvent;
 import com.darktale.darktaleapi.event.player.APITeleportPlayerEvent;
 import java.util.HashMap;
 
@@ -45,6 +45,10 @@ public class DarktalePlayer {
 
         loadJSONVariables();
         darktalePlayers.put(playerID, this);
+
+        //Set the players prefix/nickname
+        String playerPrefix = ((clan != null) ? "[" + clan.getName() + "]" : "[]") + " " + playerName;
+        DarktaleAPI.getAPI().eventHandler().callEvent(new APISetPlayerNicknameEvent(playerID, playerName, playerPrefix));
     }
 
     private void loadJSONVariables() {
