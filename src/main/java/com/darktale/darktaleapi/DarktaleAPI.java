@@ -71,7 +71,7 @@ public class DarktaleAPI {
         DarktaleAPI.getAPI().setCommandHandler(new APICommandHandler());
 
         DarktalePlayer player = new DarktalePlayer("randomid123", "rhin_");
-        player.getClan().addInvitedPlayer("Notch");
+        player.getClan().addInvitation("Notch");
 
         System.out.println(DarktaleAPI.getAPI().getServerConfig().getSpawnLocation().getY());
     }

@@ -50,7 +50,7 @@ public class DarktalePlayer {
     private void loadJSONVariables() {
         //Load clan information. Drop the nullcheck eventually.
         if (JSONManager.hasObject(jsonFile, "clan")) {
-            this.clan = Clan.getClan((String) JSONManager.getObject(jsonFile, "name", "clan"));
+            this.clan = Clan.createClan((String) JSONManager.getObject(jsonFile, "name", "clan"));
         }
     }
 

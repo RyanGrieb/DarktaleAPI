@@ -65,7 +65,7 @@ public class Clan {
         JSONManager.appendJSONToArray(jsonFile, playerObj, "players", "clan");
     }
 
-    public void addInvitedPlayer(String playerID) {
+    public void addInvitation(String playerID) {
         if (invitedPlayers.contains(playerID)) {
             return;
         }
@@ -100,11 +100,23 @@ public class Clan {
         return name;
     }
 
+    public ArrayList<String> getInvitedPlayers() {
+        return invitedPlayers;
+    }
+
+    //TODO: We might not need this method. It seems redundant /w the one below
     public static void createClan(DarktalePlayer player, String name) {
         Clan clan = new Clan(name);
         clan.addPlayer(player);
         player.setClanRank(ClanRank.LEADER);
         clans.put(clan.getName(), clan);
+    }
+
+    public static Clan createClan(String name) {
+        Clan clan = new Clan(name);
+        clans.put(clan.getName(), clan);
+
+        return clan;
     }
 
     private static String getClanJSONPath(String clanName) {
@@ -124,11 +136,6 @@ public class Clan {
             return null;
         }
 
-        if (!clans.containsKey(clanName)) {
-            clans.put(clanName, new Clan(clanName));
-        }
-
-        //TODO: If the clan is not in the hashmap, attempt to load it from json.
         return clans.get(clanName);
     }
 }

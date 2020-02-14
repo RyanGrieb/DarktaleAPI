@@ -80,6 +80,21 @@ public class ClanCommand extends APICommand {
                 return;
             }
 
+            Clan clan = Clan.getClan(arguments[2]);
+
+            if (clan == null) {
+                player.sendMessage("Error: Clan not found");
+                return;
+            }
+
+            if (clan.getInvitedPlayers().contains(player.getID())) {
+                clan.addPlayer(player);
+            } else {
+                //TODO: Check if the leader set the clan to open invitation
+                player.sendMessage("Error: You're not invited to join " + clan.getName());
+                return;
+            }
+
             player.sendMessage("Joined " + arguments[2]);
 
         }
@@ -116,8 +131,13 @@ public class ClanCommand extends APICommand {
                 return;
             }
 
+            if (player.getClan().getInvitedPlayers().contains(invitedPlayer.getID())) {
+                player.sendMessage("Error: You already invited " + invitedPlayer.getName() + " to the clan");
+                return;
+            }
+
             //Add the player name to the clans's invitation list
-            player.getClan().addInvitedPlayer(invitedPlayer.getID());
+            player.getClan().addInvitation(invitedPlayer.getID());
             invitedPlayer.sendMessage("You have been invited to join " + player.getClan().getName());
             player.sendMessage("Invited " + invitedPlayer.getName() + " to " + player.getClan().getName());
         }
