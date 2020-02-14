@@ -120,6 +120,16 @@ public class DarktalePlayer {
         return darktalePlayers.get(playerID);
     }
 
+    public static DarktalePlayer getPlayerByName(String playerName) {
+        for (DarktalePlayer player : darktalePlayers.values()) {
+            if (player.getName().equals(playerName)) {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
     private static String getPlayerJSONPath(String playerID) throws Exception {
 
         //Check if the players json file exists

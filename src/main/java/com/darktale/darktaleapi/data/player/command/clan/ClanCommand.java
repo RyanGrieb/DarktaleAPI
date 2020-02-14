@@ -110,7 +110,16 @@ public class ClanCommand extends APICommand {
                 return;
             }
 
-            player.sendMessage("Invited " + arguments[2] + " to " + player.getClan().getName());
+            DarktalePlayer invitedPlayer = DarktalePlayer.getPlayerByName(arguments[2]);
+            if (invitedPlayer == null) {
+                player.sendMessage("Error: You can only invite online players");
+                return;
+            }
+
+            //Add the player name to the clans's invitation list
+            player.getClan().addInvitedPlayer(invitedPlayer.getID());
+            invitedPlayer.sendMessage("You have been invited to join " + player.getClan().getName());
+            player.sendMessage("Invited " + invitedPlayer.getName() + " to " + player.getClan().getName());
         }
 
     }

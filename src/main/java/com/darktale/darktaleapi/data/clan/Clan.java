@@ -6,6 +6,7 @@ import com.darktale.darktaleapi.data.file.JSONFile;
 import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,11 +20,13 @@ public class Clan {
     private static HashMap<String, Clan> clans = new HashMap<String, Clan>();
 
     private HashMap<String, ClanRank> clanPlayers;
+    private ArrayList<String> invitedPlayers;
     private String name;
     private JSONFile jsonFile;
 
     public Clan(String name) {
         clanPlayers = new HashMap<String, ClanRank>();
+        invitedPlayers = new ArrayList<String>();
 
         this.name = name;
         this.jsonFile = new JSONFile(getClanJSONPath(name));
@@ -35,6 +38,13 @@ public class Clan {
             JSONArray array = JSONManager.getJSONArray(jsonFile, "players", "clan");
             for (int i = 0; i < array.length(); i++) {
                 clanPlayers.put(array.getJSONObject(i).getString("id"), ClanRank.toRank(array.getJSONObject(i).getInt("rank")));
+            }
+        }
+
+        if (JSONManager.hasObject(jsonFile, "invitedPlayers", "clan")) {
+            JSONArray array = JSONManager.getJSONArray(jsonFile, "invitedPlayers", "clan");
+            for (int i = 0; i < array.length(); i++) {
+                invitedPlayers.add(array.getString(i));
             }
         }
     }
@@ -53,6 +63,14 @@ public class Clan {
         playerObj.put("id", player.getID());
 
         JSONManager.appendJSONToArray(jsonFile, playerObj, "players", "clan");
+    }
+
+    public void addInvitedPlayer(String playerID) {
+        if (invitedPlayers.contains(playerID)) {
+            return;
+        }
+        invitedPlayers.add(playerID);
+        JSONManager.appendJSONToArray(jsonFile, playerID, "invitedPlayers", "clan");
     }
 
     public void setClanRank(String playerID, ClanRank rank) {

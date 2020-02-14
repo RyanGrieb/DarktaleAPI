@@ -19,7 +19,7 @@ public class APIRecivePlayerLocationEvent extends APIPlayerEvent {
     @Override
     public boolean execute() {
         //TODO: Check when the player walks into territory, restricted areas, ect. we reset the players location by seting a
-        //teleport event to the non-updated player location.
+        //teleport event to the non-updated player location. OORRRR WE CAN JUST RETURN false to cancel the event.
         getPlayer().updateLocation(location);
         return true;
     }

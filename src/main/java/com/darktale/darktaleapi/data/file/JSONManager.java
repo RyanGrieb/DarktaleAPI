@@ -60,9 +60,9 @@ public class JSONManager {
         FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
     }
 
-    public static void appendJSONToArray(JSONFile jsonFile, JSONObject jsonObj, String arrayKey, String... parentObjects) {
+    public static void appendJSONToArray(JSONFile jsonFile, Object object, String arrayKey, String... parentObjects) {
         if (parentObjects.length <= 0) {
-            jsonFile.getJSONArray(arrayKey).put(jsonObj);
+            jsonFile.getJSONArray(arrayKey).put(object);
             FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
             return;
         }
@@ -72,7 +72,7 @@ public class JSONManager {
             currentObject.put(arrayKey, new JSONArray());
         }
 
-        currentObject.getJSONArray(arrayKey).put(jsonObj);
+        currentObject.getJSONArray(arrayKey).put(object);
         FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
     }
 
