@@ -7,6 +7,8 @@ import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.json.JSONArray;
@@ -97,6 +99,11 @@ public class Clan {
         for (DarktalePlayer onlinePlayer : getOnlinePlayers()) {
             onlinePlayer.sendMessage(player.getName() + " has left the clan");
         }
+
+        //If the clan is empty, delete the clan
+        if (clanPlayers.size() <= 0) {
+            Clan.destroyClan(name);
+        }
     }
 
     public void addInvitation(String playerID) {
@@ -186,5 +193,14 @@ public class Clan {
         }
 
         return clans.get(clanName);
+    }
+
+    public static void destroyClan(String clanName) {
+        clans.remove(clanName, clans);
+        try {
+            Files.deleteIfExists(Paths.get("./DarktaleConfig/clan/" + clanName + ".json"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

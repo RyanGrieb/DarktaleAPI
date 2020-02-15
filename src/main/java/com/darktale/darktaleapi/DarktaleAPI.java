@@ -76,5 +76,6 @@ public class DarktaleAPI {
         Clan.createClan(player, "Coolkids");
         player.getClan().addPlayer(otherPlayer);
         player.getClan().removePlayer(otherPlayer);
+        player.getClan().removePlayer(player);
     }
 }

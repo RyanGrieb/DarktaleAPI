@@ -23,9 +23,11 @@ public class FileManager {
                 line = br.readLine();
             }
             result = sb.toString();
+            br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return result;
     }
 
@@ -34,6 +36,7 @@ public class FileManager {
             BufferedWriter bw = new BufferedWriter(new FileWriter(path));
             bw.append(text);
             bw.flush();
+            bw.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
