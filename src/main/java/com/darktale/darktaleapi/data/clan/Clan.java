@@ -20,6 +20,9 @@ public class Clan {
 
     private static HashMap<String, Clan> clans = new HashMap<String, Clan>();
 
+    //TODO: Rethink how i want to use the clanPlayers hashmap, it seems bad....
+    //I think we want a ClanPlayer class that stores information such as clanRank, isOnline, ect. Wouldn't be a wrapper for DarktalePlayer
+    //as that class is only for online players.
     private HashMap<String, ClanRank> clanPlayers;
     private ArrayList<String> invitedPlayers;
     private String name;
@@ -56,14 +59,44 @@ public class Clan {
             return;
         }
 
+        for (DarktalePlayer onlinePlayer : getOnlinePlayers()) {
+            onlinePlayer.sendMessage(player.getName() + " has joined the clan");
+        }
+
         player.setClan(this);
         clanPlayers.put(player.getID(), ClanRank.RECRUIT);
 
         JSONObject playerObj = new JSONObject();
         playerObj.put("rank", ClanRank.RECRUIT.value());
         playerObj.put("id", player.getID());
+        JSONManager.appendToJSONArray(jsonFile, playerObj, "players", "clan");
 
-        JSONManager.appendJSONToArray(jsonFile, playerObj, "players", "clan");
+        //Remove the player from the invited player array.
+        JSONManager.removeFromJSONArray(jsonFile, player.getID(), "invitedPlayers", "clan");
+        invitedPlayers.remove(player.getID());
+    }
+
+    public void removePlayer(DarktalePlayer player) {
+        if (!clanPlayers.containsKey(player.getID())) {
+            return;
+        }
+
+        player.setClan(null);
+        clanPlayers.remove(player.getID());
+
+        //Right now we manually remove the JSONObject since we can't really tell the json what object to remove.
+        JSONArray array = jsonFile.getJSONObject("clan").getJSONArray("players");
+        for (int i = 0; i < array.length(); i++) {
+            if (array.getJSONObject(i).getString("id").equals(player.getID())) {
+                array.remove(i);
+            }
+        }
+
+        FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+
+        for (DarktalePlayer onlinePlayer : getOnlinePlayers()) {
+            onlinePlayer.sendMessage(player.getName() + " has left the clan");
+        }
     }
 
     public void addInvitation(String playerID) {
@@ -71,7 +104,7 @@ public class Clan {
             return;
         }
         invitedPlayers.add(playerID);
-        JSONManager.appendJSONToArray(jsonFile, playerID, "invitedPlayers", "clan");
+        JSONManager.appendToJSONArray(jsonFile, playerID, "invitedPlayers", "clan");
     }
 
     public void setClanRank(String playerID, ClanRank rank) {
@@ -99,6 +132,19 @@ public class Clan {
 
     public String getName() {
         return name;
+    }
+
+    //TODO: I don't really like this and the clanPlayers hashmap. Think of a way to streamline this.
+    public ArrayList<DarktalePlayer> getOnlinePlayers() {
+        ArrayList<DarktalePlayer> players = new ArrayList<DarktalePlayer>();
+        for (String playerID : clanPlayers.keySet()) {
+            DarktalePlayer player = DarktalePlayer.getPlayer(playerID);
+            if (player != null) {
+                players.add(player);
+            }
+        }
+
+        return players;
     }
 
     public HashMap<String, ClanRank> getClanPlayers() {

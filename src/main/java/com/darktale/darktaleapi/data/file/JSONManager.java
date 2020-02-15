@@ -60,7 +60,19 @@ public class JSONManager {
         FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
     }
 
-    public static void appendJSONToArray(JSONFile jsonFile, Object object, String arrayKey, String... parentObjects) {
+    public static void removeJSONObject(JSONFile jsonFile, String objectKey, String... parentObjects) {
+        if (parentObjects.length <= 0) {
+            jsonFile.remove(objectKey);
+            FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+            return;
+        }
+
+        JSONObject currentObject = getJSONObjectFromTree(jsonFile, parentObjects);
+        currentObject.remove(objectKey);
+        FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+    }
+
+    public static void appendToJSONArray(JSONFile jsonFile, Object object, String arrayKey, String... parentObjects) {
         if (parentObjects.length <= 0) {
             jsonFile.getJSONArray(arrayKey).put(object);
             FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
@@ -68,11 +80,41 @@ public class JSONManager {
         }
 
         JSONObject currentObject = getJSONObjectFromTree(jsonFile, parentObjects);
+
         if (!currentObject.has(arrayKey)) {
             currentObject.put(arrayKey, new JSONArray());
         }
 
         currentObject.getJSONArray(arrayKey).put(object);
+        FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+    }
+
+    public static void removeFromJSONArray(JSONFile jsonFile, Object object, String arrayKey, String... parentObjects) {
+        if (parentObjects.length <= 0) {
+            JSONArray array = jsonFile.getJSONArray(arrayKey);
+            for (int i = 0; i < array.length(); i++) {
+                if (array.get(i).equals(object)) {
+                    array.remove(i);
+                }
+            }
+
+            FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
+            return;
+        }
+
+        JSONObject currentObject = getJSONObjectFromTree(jsonFile, parentObjects);
+
+        if (!currentObject.has(arrayKey)) {
+            return;
+        }
+
+        JSONArray array = currentObject.getJSONArray(arrayKey);
+        for (int i = 0; i < array.length(); i++) {
+            if (array.get(i).equals(object)) {
+                array.remove(i);
+            }
+        }
+
         FileManager.setFileText(jsonFile.getFilePath(), jsonFile.toString());
     }
 

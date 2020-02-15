@@ -80,8 +80,12 @@ public class DarktalePlayer {
 
     public void setClan(Clan clan) {
         this.clan = clan;
-        JSONManager.appendJSONObject(jsonFile, clan.getName(), "name", "clan");
         updatePrefix();
+        if (clan == null) {
+            JSONManager.removeJSONObject(jsonFile, "clan");
+        } else {
+            JSONManager.appendJSONObject(jsonFile, clan.getName(), "name", "clan");
+        }
     }
 
     public void setClanRank(ClanRank clanRank) {

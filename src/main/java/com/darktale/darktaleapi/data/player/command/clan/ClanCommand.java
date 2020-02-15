@@ -19,6 +19,7 @@ public class ClanCommand extends APICommand {
         registerSubCommand(new ClanJoin());
         registerSubCommand(new ClanCreate());
         registerSubCommand(new ClanInvite());
+        registerSubCommand(new ClanLeave());
     }
 
     @Override
@@ -144,6 +145,27 @@ public class ClanCommand extends APICommand {
             player.getClan().addInvitation(invitedPlayer.getID());
             invitedPlayer.sendMessage("You have been invited to join " + player.getClan().getName());
             player.sendMessage("Invited " + invitedPlayer.getName() + " to " + player.getClan().getName());
+        }
+
+    }
+
+    class ClanLeave extends APICommand {
+
+        public ClanLeave() {
+            super("leave", "clan leave");
+        }
+
+        @Override
+        public void execute(DarktalePlayer player, String[] arguments) {
+            if (player.getClan() == null) {
+                player.sendMessage("Error: You're not in a clan leave");
+                return;
+            }
+
+            String clanName = player.getClan().getName();
+
+            player.getClan().removePlayer(player);
+            player.sendMessage("You have left " + clanName);
         }
 
     }
