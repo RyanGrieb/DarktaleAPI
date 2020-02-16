@@ -14,12 +14,12 @@ import com.darktale.darktaleapi.event.misc.APIBroadcastEvent;
 public class ClanCommand extends APICommand {
 
     public ClanCommand() {
-        super("clan", "clan");
+        super("clan");
 
-        registerSubCommand(new ClanJoin());
-        registerSubCommand(new ClanCreate());
-        registerSubCommand(new ClanInvite());
-        registerSubCommand(new ClanLeave());
+        registerSubCommand(new ClanJoin(this));
+        registerSubCommand(new ClanCreate(this));
+        registerSubCommand(new ClanInvite(this));
+        registerSubCommand(new ClanLeave(this));
     }
 
     @Override
@@ -34,13 +34,12 @@ public class ClanCommand extends APICommand {
             printHelp(player);
             return;
         }
-
     }
 
     class ClanCreate extends APICommand {
 
-        public ClanCreate() {
-            super("create", "clan create");
+        public ClanCreate(APICommand parentCommand) {
+            super("create", parentCommand);
         }
 
         @Override
@@ -64,8 +63,8 @@ public class ClanCommand extends APICommand {
 
     class ClanJoin extends APICommand {
 
-        public ClanJoin() {
-            super("join", "clan join");
+        public ClanJoin(APICommand parentCommand) {
+            super("join", parentCommand);
         }
 
         @Override
@@ -103,8 +102,8 @@ public class ClanCommand extends APICommand {
 
     class ClanInvite extends APICommand {
 
-        public ClanInvite() {
-            super("invite", "clan invite");
+        public ClanInvite(APICommand parentCommand) {
+            super("invite", parentCommand);
         }
 
         @Override
@@ -151,8 +150,8 @@ public class ClanCommand extends APICommand {
 
     class ClanLeave extends APICommand {
 
-        public ClanLeave() {
-            super("leave", "clan leave");
+        public ClanLeave(APICommand parentCommand) {
+            super("leave", parentCommand);
         }
 
         @Override

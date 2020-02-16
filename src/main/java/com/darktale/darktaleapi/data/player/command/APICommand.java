@@ -5,7 +5,6 @@ import com.darktale.darktaleapi.data.file.JSONFile;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import java.util.HashMap;
-import org.json.JSONObject;
 
 /**
  *
@@ -15,13 +14,15 @@ public abstract class APICommand {
 
     protected HashMap<String, APICommand> subCommands;
     private String name;
-    private String fullname;
 
     private JSONFile jsonFile;
 
-    public APICommand(String name, String fullname) {
+    public APICommand(String name) {
+        this(name, null);
+    }
+
+    public APICommand(String name, APICommand parentCommand) {
         this.name = name;
-        this.fullname = fullname;
         this.subCommands = new HashMap<String, APICommand>();
 
         FileManager.makeDirectory("./DarktaleConfig/");
@@ -29,19 +30,21 @@ public abstract class APICommand {
 
         String jsonFilepath;
 
-        //If we are a parent command with no subcommands
-        if (fullname.split(" ").length <= 1) {
+        if (parentCommand == null) {
+            //If we are a parent command with no subcommands
             FileManager.makeDirectory("./DarktaleConfig/commands/" + name);
             jsonFilepath = "./DarktaleConfig/commands/" + name + "/" + name + ".json";
+            System.out.println(name + " is a parent command:");
+            System.out.println(jsonFilepath);
         } else {
-            //TODO: Account for multiple subcommands. e.g. "/darktale clan create [NAME]"
-            String parentCommandName = fullname.split(" ")[0];
-            jsonFilepath = "./DarktaleConfig/commands/" + parentCommandName + "/" + fullname + ".json";
+            //Account for multiple subcommands. e.g. "/darktale clan create [NAME]"
+            jsonFilepath = "./DarktaleConfig/commands/" + parentCommand.getName() + "/" + name + ".json";
+            System.out.println(name + " is a parent command:");
+            System.out.println(jsonFilepath);
         }
 
         makeJSONFile(jsonFilepath);
         this.jsonFile = new JSONFile(jsonFilepath);
-
     }
 
     public void registerSubCommand(APICommand command) {
@@ -60,6 +63,10 @@ public abstract class APICommand {
 
     public String getName() {
         return name;
+    }
+
+    public HashMap<String, APICommand> getSubCommands() {
+        return subCommands;
     }
 
     public String getDescription() {

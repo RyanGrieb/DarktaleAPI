@@ -90,7 +90,6 @@ public class DarktalePlayer {
 
     public void setClanRank(ClanRank clanRank) {
         this.getClan().setClanRank(playerID, clanRank);
-        //JSONManager.appendJSONObject(jsonFile, clanRank.value(), "rank", "clan");
     }
 
     public APILocation getLocation() {

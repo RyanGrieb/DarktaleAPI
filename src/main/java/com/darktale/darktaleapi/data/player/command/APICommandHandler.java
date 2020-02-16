@@ -28,7 +28,6 @@ public class APICommandHandler {
 
     public void registerCommand(APICommand command) {
         commands.put(command.getName(), command);
-
         DarktaleAPI.getAPI().eventHandler().callEvent(new APIRegisterCommandEvent(command));
     }
 

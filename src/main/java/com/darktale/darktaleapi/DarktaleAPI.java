@@ -72,10 +72,8 @@ public class DarktaleAPI {
 
         DarktalePlayer player = new DarktalePlayer("randomid123", "rhin_");
         DarktalePlayer otherPlayer = new DarktalePlayer("id123", "Bob");
+        DarktaleAPI.getAPI().eventHandler().callEvent(
+                new APIPlayerCommandEvent("randomid123", player.getName(), "/clan create Pop"));
 
-        Clan.createClan(player, "Coolkids");
-        player.getClan().addPlayer(otherPlayer);
-        player.getClan().removePlayer(otherPlayer);
-        player.getClan().removePlayer(player);
     }
 }

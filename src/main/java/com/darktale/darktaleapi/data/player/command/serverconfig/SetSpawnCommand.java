@@ -13,7 +13,7 @@ import com.darktale.darktaleapi.event.player.APISendPlayerMessageEvent;
 public class SetSpawnCommand extends APICommand {
 
     public SetSpawnCommand() {
-        super("setspawn", "setspawn");
+        super("setspawn");
     }
 
     @Override
