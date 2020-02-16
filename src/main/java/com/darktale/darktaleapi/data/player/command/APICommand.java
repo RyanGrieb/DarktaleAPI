@@ -18,33 +18,8 @@ public abstract class APICommand {
     private JSONFile jsonFile;
 
     public APICommand(String name) {
-        this(name, null);
-    }
-
-    public APICommand(String name, APICommand parentCommand) {
-        this.name = name;
         this.subCommands = new HashMap<String, APICommand>();
-
-        FileManager.makeDirectory("./DarktaleConfig/");
-        FileManager.makeDirectory("./DarktaleConfig/commands");
-
-        String jsonFilepath;
-
-        if (parentCommand == null) {
-            //If we are a parent command with no subcommands
-            FileManager.makeDirectory("./DarktaleConfig/commands/" + name);
-            jsonFilepath = "./DarktaleConfig/commands/" + name + "/" + name + ".json";
-            System.out.println(name + " is a parent command:");
-            System.out.println(jsonFilepath);
-        } else {
-            //Account for multiple subcommands. e.g. "/darktale clan create [NAME]"
-            jsonFilepath = "./DarktaleConfig/commands/" + parentCommand.getName() + "/" + name + ".json";
-            System.out.println(name + " is a parent command:");
-            System.out.println(jsonFilepath);
-        }
-
-        makeJSONFile(jsonFilepath);
-        this.jsonFile = new JSONFile(jsonFilepath);
+        this.name = name;
     }
 
     public void registerSubCommand(APICommand command) {
@@ -59,6 +34,10 @@ public abstract class APICommand {
         subCommands.get(commandName).execute(player, arguments);
 
         return true;
+    }
+
+    public void setJSON(JSONFile jsonFile) {
+        this.jsonFile = jsonFile;
     }
 
     public String getName() {

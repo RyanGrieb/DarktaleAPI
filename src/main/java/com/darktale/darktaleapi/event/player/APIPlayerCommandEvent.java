@@ -17,9 +17,7 @@ public class APIPlayerCommandEvent extends APIPlayerEvent {
 
     @Override
     public boolean execute() {
-        //System.out.println("APIPlayerCommandEvent");
         DarktaleAPI.getAPI().commandHandler().executeCommand(player, command);
-
         return true;
     }
 

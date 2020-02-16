@@ -16,10 +16,10 @@ public class ClanCommand extends APICommand {
     public ClanCommand() {
         super("clan");
 
-        registerSubCommand(new ClanJoin(this));
-        registerSubCommand(new ClanCreate(this));
-        registerSubCommand(new ClanInvite(this));
-        registerSubCommand(new ClanLeave(this));
+        registerSubCommand(new ClanJoin());
+        registerSubCommand(new ClanCreate());
+        registerSubCommand(new ClanInvite());
+        registerSubCommand(new ClanLeave());
     }
 
     @Override
@@ -38,8 +38,8 @@ public class ClanCommand extends APICommand {
 
     class ClanCreate extends APICommand {
 
-        public ClanCreate(APICommand parentCommand) {
-            super("create", parentCommand);
+        public ClanCreate() {
+            super("create");
         }
 
         @Override
@@ -63,8 +63,8 @@ public class ClanCommand extends APICommand {
 
     class ClanJoin extends APICommand {
 
-        public ClanJoin(APICommand parentCommand) {
-            super("join", parentCommand);
+        public ClanJoin() {
+            super("join");
         }
 
         @Override
@@ -102,8 +102,8 @@ public class ClanCommand extends APICommand {
 
     class ClanInvite extends APICommand {
 
-        public ClanInvite(APICommand parentCommand) {
-            super("invite", parentCommand);
+        public ClanInvite() {
+            super("invite");
         }
 
         @Override
@@ -150,8 +150,8 @@ public class ClanCommand extends APICommand {
 
     class ClanLeave extends APICommand {
 
-        public ClanLeave(APICommand parentCommand) {
-            super("leave", parentCommand);
+        public ClanLeave() {
+            super("leave");
         }
 
         @Override
