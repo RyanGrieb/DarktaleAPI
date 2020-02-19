@@ -203,7 +203,7 @@ public class ClanCommand extends APICommand {
                 DarktalePlayer.getPlayerByName(targetPlayer).sendMessage("You were kicked from " + player.getClan().getName());
             }
 
-            //TODO: Send all online players in the clan the kick message
+            player.getClan().sendClanMessage(targetPlayer + " was kicked from the clan");
         }
 
     }

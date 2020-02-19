@@ -37,9 +37,7 @@ public class Clan {
             return;
         }
 
-        for (DarktalePlayer onlinePlayer : getOnlinePlayers()) {
-            onlinePlayer.sendMessage(player.getName() + " has joined the clan");
-        }
+        sendClanMessage(player.getName() + " has joined the clan");
 
         player.setClan(this);
         clanPlayers.put(player.getName(), new ClanPlayer(player, ClanRank.RECRUIT, false));
@@ -78,6 +76,12 @@ public class Clan {
 
     public void setClanRank(String playerName, ClanRank rank) {
         clanPlayers.get(playerName).setRank(rank);
+    }
+
+    public void sendClanMessage(String message) {
+        for (DarktalePlayer player : getOnlinePlayers()) {
+            player.sendMessage(message);
+        }
     }
 
     public ClanRank getClanRank(String playerName) {
