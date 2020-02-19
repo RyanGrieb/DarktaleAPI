@@ -12,6 +12,8 @@ import com.darktale.darktaleapi.data.world.APILocation;
 import com.darktale.darktaleapi.event.player.APISendPlayerMessageEvent;
 import com.darktale.darktaleapi.event.player.APISetPlayerNicknameEvent;
 import com.darktale.darktaleapi.event.player.APITeleportPlayerEvent;
+import com.google.gson.Gson;
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -28,33 +30,19 @@ public class DarktalePlayer {
     private APILocation location;
 
     //Json variables
-    private Clan clan;
+    private String clanName;
+    private boolean newPlayer;
     private StaffRank staffRank;
-
-    private JSONFile jsonFile;
 
     public DarktalePlayer(String playerID, String playerName) {
         this.playerID = playerID;
         this.playerName = playerName;
-        try {
+        this.newPlayer = true;
 
-            this.jsonFile = new JSONFile(getPlayerJSONPath(playerID));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        loadJSONVariables();
         darktalePlayers.put(playerID, this);
 
         //Set the players prefix/nickname
         updatePrefix();
-    }
-
-    private void loadJSONVariables() {
-        //Load clan information. Drop the nullcheck eventually.
-        if (JSONManager.hasObject(jsonFile, "clan")) {
-            this.clan = Clan.getClan((String) JSONManager.getObject(jsonFile, "name", "clan"));
-        }
     }
 
     public void updateLocation(APILocation location) {
@@ -70,7 +58,7 @@ public class DarktalePlayer {
     }
 
     public void updatePrefix() {
-        String playerPrefix = ((clan != null) ? "[" + clan.getName() + "]" : "[]") + " " + playerName;
+        String playerPrefix = ((clanName != null) ? "[" + clanName + "]" : "[]") + " " + playerName;
         setNickname(playerPrefix);
     }
 
@@ -78,18 +66,16 @@ public class DarktalePlayer {
         DarktaleAPI.getAPI().eventHandler().callEvent(new APISetPlayerNicknameEvent(playerID, playerName, nickname));
     }
 
+    public void setNew(boolean newPlayer) {
+        this.newPlayer = newPlayer;
+    }
+
     public void setClan(Clan clan) {
-        this.clan = clan;
-        updatePrefix();
-        if (clan == null) {
-            JSONManager.removeJSONObject(jsonFile, "clan");
-        } else {
-            JSONManager.appendJSONObject(jsonFile, clan.getName(), "name", "clan");
-        }
+        this.clanName = clan.getName();
     }
 
     public void setClanRank(ClanRank clanRank) {
-        this.getClan().setClanRank(playerID, clanRank);
+        this.getClan().setClanRank(playerName, clanRank);
     }
 
     public APILocation getLocation() {
@@ -105,28 +91,28 @@ public class DarktalePlayer {
     }
 
     public ClanRank getClanRank() {
-        return clan.getClanRank(playerID);
+        return Clan.getClan(clanName).getClanRank(playerName);
     }
 
     public boolean isNew() {
-        if (JSONManager.hasObject(jsonFile, "newPlayer")) {
-            if ((Boolean) JSONManager.getObject(jsonFile, "newPlayer")) {
-                JSONManager.appendJSONObject(jsonFile, false, "newPlayer");
-            }
-        } else if (!JSONManager.hasObject(jsonFile, "newPlayer")) {
-            JSONManager.appendJSONObject(jsonFile, true, "newPlayer");
-        }
-
-        return (Boolean) JSONManager.getObject(jsonFile, "newPlayer");
+        return newPlayer;
     }
 
     public Clan getClan() {
-        return clan;
+        return Clan.getClan(clanName);
     }
 
     public static DarktalePlayer getPlayer(String playerID, String playerName) {
+        String playerJSONPath = "./DarktaleConfig/player/" + playerID + ".json";
+
         if (!darktalePlayers.containsKey(playerID)) {
-            DarktalePlayer player = new DarktalePlayer(playerID, playerName);
+            DarktalePlayer player;
+            File file = new File(playerJSONPath);
+            if (file.exists()) {
+                player = DarktaleAPI.getAPI().getGSON().fromJson(new JSONFile(playerJSONPath).toString(), DarktalePlayer.class);
+            } else {
+                player = new DarktalePlayer(playerID, playerName);
+            }
         }
         return darktalePlayers.get(playerID);
     }
@@ -145,15 +131,18 @@ public class DarktalePlayer {
         return null;
     }
 
-    private static String getPlayerJSONPath(String playerID) throws Exception {
-
-        //Check if the players json file exists
+    public static void savePlayerStates() {
         FileManager.makeDirectory("./DarktaleConfig/");
         FileManager.makeDirectory("./DarktaleConfig/player");
-        String playerJSONPath = "./DarktaleConfig/player/" + playerID + ".json";
 
-        makeJSONFile(playerJSONPath);
+        for (DarktalePlayer player : darktalePlayers.values()) {
+            if (player.isNew()) {
+                player.setNew(false);
+            }
 
-        return playerJSONPath;
+            String playerJSONPath = "./DarktaleConfig/player/" + player.getID() + ".json";
+            makeJSONFile(playerJSONPath);
+            FileManager.setFileText(playerJSONPath, DarktaleAPI.getAPI().getGSON().toJson(player));
+        }
     }
 }

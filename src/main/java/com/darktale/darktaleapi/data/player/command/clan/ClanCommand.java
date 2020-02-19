@@ -20,6 +20,7 @@ public class ClanCommand extends APICommand {
         registerSubCommand(new ClanCreate());
         registerSubCommand(new ClanInvite());
         registerSubCommand(new ClanLeave());
+        registerSubCommand(new ClanKick());
     }
 
     @Override
@@ -87,7 +88,7 @@ public class ClanCommand extends APICommand {
                 return;
             }
 
-            if (clan.getInvitedPlayers().contains(player.getID())) {
+            if (clan.isInvited(player.getName())) {
                 clan.addPlayer(player);
             } else {
                 //TODO: Check if the leader set the clan to open invitation
@@ -130,7 +131,7 @@ public class ClanCommand extends APICommand {
                 return;
             }
 
-            if (player.getClan().getInvitedPlayers().contains(invitedPlayer.getID())) {
+            if (player.getClan().isInvited(invitedPlayer.getName())) {
                 player.sendMessage("Error: You already invited " + invitedPlayer.getName() + " to the clan");
                 return;
             }
@@ -141,7 +142,7 @@ public class ClanCommand extends APICommand {
             }
 
             //Add the player name to the clans's invitation list
-            player.getClan().addInvitation(invitedPlayer.getID());
+            player.getClan().addInvitation(invitedPlayer.getName());
             invitedPlayer.sendMessage("You have been invited to join " + player.getClan().getName());
             player.sendMessage("Invited " + invitedPlayer.getName() + " to " + player.getClan().getName());
         }
@@ -161,10 +162,40 @@ public class ClanCommand extends APICommand {
                 return;
             }
 
-            String clanName = player.getClan().getName();
+            for (DarktalePlayer onlinePlayer : player.getClan().getOnlinePlayers()) {
+                onlinePlayer.sendMessage(player.getName() + " has left the clan");
+            }
 
+            player.sendMessage("You have left" + player.getClan().getName());
             player.getClan().removePlayer(player);
-            player.sendMessage("You have left " + clanName);
+        }
+
+    }
+
+    class ClanKick extends APICommand {
+
+        public ClanKick() {
+            super("kick");
+        }
+
+        @Override
+        public void execute(DarktalePlayer player, String[] arguments) {
+            if (player.getClan() == null) {
+                player.sendMessage("Error: You're not in a clan");
+                return;
+            }
+
+            if (player.getClanRank().value() < ClanRank.OFFICER.value()) {
+                player.sendMessage("Error: You don't have permission to kick players");
+                return;
+            }
+
+            //Wow, this brings up a bunch of problems. What if the player is offline?
+            //What do we do? The command arguments only provides the player name...
+            DarktalePlayer targetPlayer = DarktalePlayer.getPlayerByName(arguments[2]);
+
+            // player.getClan().removePlayer();
+            player.getClan().removePlayer(targetPlayer);
         }
 
     }

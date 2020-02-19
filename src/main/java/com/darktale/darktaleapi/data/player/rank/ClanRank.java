@@ -6,11 +6,12 @@ package com.darktale.darktaleapi.data.player.rank;
  */
 public enum ClanRank {
 
-    RECRUIT(0),
-    MEMBER(1),
-    OFFICER(2),
-    GENERAL(3),
-    LEADER(4);
+    NONE(0),
+    RECRUIT(1),
+    MEMBER(2),
+    OFFICER(3),
+    GENERAL(4),
+    LEADER(5);
 
     private int value;
 

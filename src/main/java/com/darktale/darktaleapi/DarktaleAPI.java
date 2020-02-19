@@ -8,11 +8,13 @@ import com.darktale.darktaleapi.debug.DebugCommandListener;
 import com.darktale.darktaleapi.event.EventHandler;
 import com.darktale.darktaleapi.event.player.APIPlayerCommandEvent;
 import com.darktale.darktaleapi.listener.ListenerHandler;
+import com.google.gson.Gson;
 
 public class DarktaleAPI {
 
     private static DarktaleAPI api;
 
+    private Gson gson;
     private ServerConfig serverConfig;
 
     private ListenerHandler listenerHandler;
@@ -20,7 +22,13 @@ public class DarktaleAPI {
     private APICommandHandler commandHandler;
 
     public DarktaleAPI() {
+        this.gson = new Gson();
         this.serverConfig = new ServerConfig();
+    }
+
+    public void saveStates() {
+        DarktalePlayer.savePlayerStates();
+        Clan.saveClanStates();
     }
 
     public void setListenerHandler(ListenerHandler listenerHandler) {
@@ -33,6 +41,10 @@ public class DarktaleAPI {
 
     public void setCommandHandler(APICommandHandler commandHandler) {
         this.commandHandler = commandHandler;
+    }
+
+    public Gson getGSON() {
+        return gson;
     }
 
     public ServerConfig getServerConfig() {
@@ -75,5 +87,6 @@ public class DarktaleAPI {
         DarktaleAPI.getAPI().eventHandler().callEvent(
                 new APIPlayerCommandEvent("randomid123", player.getName(), "/clan create Pop"));
 
+        DarktaleAPI.getAPI().saveStates();
     }
 }
