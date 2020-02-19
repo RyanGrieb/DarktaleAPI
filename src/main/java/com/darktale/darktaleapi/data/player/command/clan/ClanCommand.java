@@ -166,7 +166,7 @@ public class ClanCommand extends APICommand {
                 onlinePlayer.sendMessage(player.getName() + " has left the clan");
             }
 
-            player.sendMessage("You have left" + player.getClan().getName());
+            player.sendMessage("You have left " + player.getClan().getName());
             player.getClan().removePlayer(player);
         }
 

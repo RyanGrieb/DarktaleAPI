@@ -31,7 +31,7 @@ public class Clan {
     }
 
     public void addPlayer(DarktalePlayer player) {
-        if (clanPlayers.containsKey(player.getName())) {
+        if (clanPlayers.containsKey(player.getName()) && clanPlayers.get(player.getName()).inClan()) {
             player.sendMessage("Error: You're already in this clan");
             return;
         }
@@ -45,11 +45,11 @@ public class Clan {
     }
 
     public void removePlayer(DarktalePlayer player) {
-        if (!clanPlayers.containsKey(player.getID())) {
+        if (!clanPlayers.containsKey(player.getName())) {
             return;
         }
 
-        player.setClan(null);
+        player.removeClan();
         clanPlayers.remove(player.getName());
 
         //If the clan is empty, delete the clan

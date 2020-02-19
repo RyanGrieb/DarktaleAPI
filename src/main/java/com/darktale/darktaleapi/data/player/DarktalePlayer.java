@@ -32,7 +32,7 @@ public class DarktalePlayer {
     private boolean newPlayer;
     private StaffRank staffRank;
 
-    public DarktalePlayer(String playerID, String playerName) {
+    private DarktalePlayer(String playerID, String playerName) {
         this.playerID = playerID;
         this.playerName = playerName;
         this.newPlayer = true;
@@ -47,6 +47,7 @@ public class DarktalePlayer {
     }
 
     public void sendMessage(String message) {
+        System.out.println("DEBUG: " + message);
         DarktaleAPI.getAPI().eventHandler().callEvent(new APISendPlayerMessageEvent(playerID, playerName, message));
     }
 
@@ -68,11 +69,21 @@ public class DarktalePlayer {
         updatePrefix();
     }
 
+    public void removeClan() {
+        this.clanName = null;
+        updatePrefix();
+    }
+
     public void setClanRank(ClanRank clanRank) {
         this.getClan().setClanRank(playerName, clanRank);
     }
 
     public void saveState() {
+        saveGSONState();
+        darktalePlayers.remove(playerID);
+    }
+
+    private void saveGSONState() {
         //TODO: Performance wise we shouldn't be doing these methods.
         FileManager.makeDirectory("./DarktaleConfig/");
         FileManager.makeDirectory("./DarktaleConfig/player");
@@ -147,9 +158,8 @@ public class DarktalePlayer {
 
     public static void savePlayerStates() {
         for (DarktalePlayer player : darktalePlayers.values()) {
-            player.saveState();
-            //TODO: Not sure if this messes with the for loop iteration
-            darktalePlayers.remove(player.getID());
+            System.out.println("Saving: " + player.getID());
+            player.saveGSONState();
         }
     }
 }

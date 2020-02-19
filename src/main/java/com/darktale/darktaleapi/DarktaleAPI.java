@@ -82,10 +82,21 @@ public class DarktaleAPI {
         DarktaleAPI.getAPI().setEventHandler(new EventHandler());
         DarktaleAPI.getAPI().setCommandHandler(new APICommandHandler());
 
-        DarktalePlayer player = new DarktalePlayer("randomid123", "rhin_");
-        DarktalePlayer otherPlayer = new DarktalePlayer("id123", "Bob");
+        DarktalePlayer player = DarktalePlayer.getPlayer("Rhin-ID", "Rhin");
+        DarktalePlayer otherPlayer = DarktalePlayer.getPlayer("Bob-ID", "Bob");
+
+        System.out.println(player);
+
+        /* DarktaleAPI.getAPI().eventHandler().callEvent(
+                new APIPlayerCommandEvent("Rhin-ID", player.getName(), "/clan create Pop"));
+
         DarktaleAPI.getAPI().eventHandler().callEvent(
-                new APIPlayerCommandEvent("randomid123", player.getName(), "/clan create Pop"));
+                new APIPlayerCommandEvent("Rhin-ID", player.getName(), "/clan invite Bob"));
+
+        DarktaleAPI.getAPI().eventHandler().callEvent(
+                new APIPlayerCommandEvent("Bob-ID", player.getName(), "/clan join Pop"));*/
+        DarktaleAPI.getAPI().eventHandler().callEvent(
+                new APIPlayerCommandEvent("Bob-ID", player.getName(), "/clan leave Pop"));
 
         DarktaleAPI.getAPI().saveStates();
     }

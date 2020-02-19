@@ -37,4 +37,8 @@ public class ClanPlayer {
     public boolean isInvited() {
         return isInivted;
     }
+
+    public boolean inClan() {
+        return !isInivted;
+    }
 }
