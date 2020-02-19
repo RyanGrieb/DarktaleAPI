@@ -30,6 +30,14 @@ public class ClanPlayer {
         this.rank = rank;
     }
 
+    public String getName() {
+        return playerName;
+    }
+
+    public String getID() {
+        return playerID;
+    }
+
     public ClanRank getRank() {
         return rank;
     }

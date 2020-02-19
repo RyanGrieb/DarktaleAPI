@@ -158,7 +158,6 @@ public class DarktalePlayer {
 
     public static void savePlayerStates() {
         for (DarktalePlayer player : darktalePlayers.values()) {
-            System.out.println("Saving: " + player.getID());
             player.saveGSONState();
         }
     }

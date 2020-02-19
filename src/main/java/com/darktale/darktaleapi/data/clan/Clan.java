@@ -4,6 +4,7 @@ import com.darktale.darktaleapi.DarktaleAPI;
 import com.darktale.darktaleapi.data.player.rank.ClanRank;
 import com.darktale.darktaleapi.data.file.FileManager;
 import com.darktale.darktaleapi.data.file.JSONFile;
+import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
 import java.io.File;
@@ -32,7 +33,7 @@ public class Clan {
 
     public void addPlayer(DarktalePlayer player) {
         if (clanPlayers.containsKey(player.getName()) && clanPlayers.get(player.getName()).inClan()) {
-            player.sendMessage("Error: You're already in this clan");
+            player.sendMessage("Error: Player already in the clan");
             return;
         }
 
@@ -44,13 +45,22 @@ public class Clan {
         clanPlayers.put(player.getName(), new ClanPlayer(player, ClanRank.RECRUIT, false));
     }
 
-    public void removePlayer(DarktalePlayer player) {
-        if (!clanPlayers.containsKey(player.getName())) {
+    public void removePlayer(String playerName) {
+        if (!clanPlayers.containsKey(playerName)) {
             return;
         }
 
-        player.removeClan();
-        clanPlayers.remove(player.getName());
+        if (DarktalePlayer.getPlayerByName(playerName) != null) {
+            DarktalePlayer player = DarktalePlayer.getPlayerByName(playerName);
+            player.removeClan();
+        } else {
+            //TODO: Think of a better way to solve this.
+            //If the player is offline, we need to update their clanName variable
+            ClanPlayer clanPlayer = clanPlayers.get(playerName);
+            JSONManager.removeJSONObject(new JSONFile("./DarktaleConfig/player/" + clanPlayer.getID() + ".json"), "clanName");
+        }
+
+        clanPlayers.remove(playerName);
 
         //If the clan is empty, delete the clan
         if (clanPlayers.size() <= 0) {
@@ -82,6 +92,14 @@ public class Clan {
         return clanPlayers.get(playerName).isInvited();
     }
 
+    public boolean inClan(String playerName) {
+        if (clanPlayers.containsKey(playerName) && clanPlayers.get(playerName).inClan()) {
+            return true;
+        }
+
+        return false;
+    }
+
     public String getName() {
         return name;
     }
@@ -89,18 +107,19 @@ public class Clan {
     //TODO: I don't really like this and the clanPlayers hashmap. Think of a way to streamline this.
     public ArrayList<DarktalePlayer> getOnlinePlayers() {
         ArrayList<DarktalePlayer> players = new ArrayList<DarktalePlayer>();
-        for (String playerName : clanPlayers.keySet()) {
-            DarktalePlayer player = DarktalePlayer.getPlayerByName(playerName);
+        for (ClanPlayer clanPlayer : clanPlayers.values()) {
+
+            if (!clanPlayer.inClan()) {
+                continue;
+            }
+
+            DarktalePlayer player = DarktalePlayer.getPlayerByName(clanPlayer.getName());
             if (player != null) {
                 players.add(player);
             }
         }
 
         return players;
-    }
-
-    public HashMap<String, ClanPlayer> getClanPlayers() {
-        return clanPlayers;
     }
 
     //TODO: We might not need this method. It seems redundant /w the one below

@@ -136,8 +136,8 @@ public class ClanCommand extends APICommand {
                 return;
             }
 
-            if (player.getClan().getClanPlayers().keySet().contains(invitedPlayer.getID())) {
-                player.sendMessage("Error: " + invitedPlayer.getName() + " is already in the clan");
+            if (player.getClan().inClan(invitedPlayer.getName())) {
+                player.sendMessage("Error: " + invitedPlayer.getName() + " is already in a clan");
                 return;
             }
 
@@ -167,7 +167,7 @@ public class ClanCommand extends APICommand {
             }
 
             player.sendMessage("You have left " + player.getClan().getName());
-            player.getClan().removePlayer(player);
+            player.getClan().removePlayer(player.getName());
         }
 
     }
@@ -190,12 +190,20 @@ public class ClanCommand extends APICommand {
                 return;
             }
 
-            //Wow, this brings up a bunch of problems. What if the player is offline?
-            //What do we do? The command arguments only provides the player name...
-            DarktalePlayer targetPlayer = DarktalePlayer.getPlayerByName(arguments[2]);
+            String targetPlayer = arguments[2];
 
-            // player.getClan().removePlayer();
+            if (!player.getClan().inClan(targetPlayer)) {
+                player.sendMessage("Error: Player not in the clan");
+                return;
+            }
+
             player.getClan().removePlayer(targetPlayer);
+
+            if (DarktalePlayer.getPlayerByName(targetPlayer) != null) {
+                DarktalePlayer.getPlayerByName(targetPlayer).sendMessage("You were kicked from " + player.getClan().getName());
+            }
+
+            //TODO: Send all online players in the clan the kick message
         }
 
     }
