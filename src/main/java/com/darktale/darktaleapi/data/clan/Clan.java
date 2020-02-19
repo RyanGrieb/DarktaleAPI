@@ -111,18 +111,6 @@ public class Clan {
         player.setClanRank(ClanRank.LEADER);
     }
 
-    private static String getClanJSONPath(String clanName) {
-
-        //Check if the players json file exists
-        FileManager.makeDirectory("./DarktaleConfig/");
-        FileManager.makeDirectory("./DarktaleConfig/clan");
-        String playerJSONPath = "./DarktaleConfig/clan/" + clanName + ".json";
-
-        makeJSONFile(playerJSONPath);
-
-        return playerJSONPath;
-    }
-
     public static Clan getClan(String clanName) {
         if (clanName == null) {
             return null;

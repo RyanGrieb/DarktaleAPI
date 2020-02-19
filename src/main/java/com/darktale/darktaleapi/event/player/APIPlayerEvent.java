@@ -7,7 +7,7 @@ import com.darktale.darktaleapi.event.APIEvent;
  *
  * @author Ryan
  */
-public class APIPlayerEvent implements APIEvent {
+public abstract class APIPlayerEvent implements APIEvent {
 
     protected DarktalePlayer player;
 
@@ -16,9 +16,7 @@ public class APIPlayerEvent implements APIEvent {
     }
 
     @Override
-    public boolean execute() {
-        return true;
-    }
+    public abstract boolean execute();
 
     public DarktalePlayer getPlayer() {
         return player;

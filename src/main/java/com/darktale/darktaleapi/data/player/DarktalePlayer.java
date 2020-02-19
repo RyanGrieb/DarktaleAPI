@@ -5,14 +5,12 @@ import com.darktale.darktaleapi.DarktaleAPI;
 import com.darktale.darktaleapi.data.clan.Clan;
 import com.darktale.darktaleapi.data.file.FileManager;
 import com.darktale.darktaleapi.data.file.JSONFile;
-import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.rank.StaffRank;
 import com.darktale.darktaleapi.data.world.APILocation;
 import com.darktale.darktaleapi.event.player.APISendPlayerMessageEvent;
 import com.darktale.darktaleapi.event.player.APISetPlayerNicknameEvent;
 import com.darktale.darktaleapi.event.player.APITeleportPlayerEvent;
-import com.google.gson.Gson;
 import java.io.File;
 import java.util.HashMap;
 
@@ -38,11 +36,6 @@ public class DarktalePlayer {
         this.playerID = playerID;
         this.playerName = playerName;
         this.newPlayer = true;
-
-        darktalePlayers.put(playerID, this);
-
-        //Set the players prefix/nickname
-        updatePrefix();
     }
 
     public void updateLocation(APILocation location) {
@@ -72,10 +65,25 @@ public class DarktalePlayer {
 
     public void setClan(Clan clan) {
         this.clanName = clan.getName();
+        updatePrefix();
     }
 
     public void setClanRank(ClanRank clanRank) {
         this.getClan().setClanRank(playerName, clanRank);
+    }
+
+    public void saveState() {
+        //TODO: Performance wise we shouldn't be doing these methods.
+        FileManager.makeDirectory("./DarktaleConfig/");
+        FileManager.makeDirectory("./DarktaleConfig/player");
+
+        if (isNew()) {
+            setNew(false);
+        }
+
+        String playerJSONPath = "./DarktaleConfig/player/" + playerID + ".json";
+        makeJSONFile(playerJSONPath);
+        FileManager.setFileText(playerJSONPath, DarktaleAPI.getAPI().getGSON().toJson(this));
     }
 
     public APILocation getLocation() {
@@ -103,17 +111,23 @@ public class DarktalePlayer {
     }
 
     public static DarktalePlayer getPlayer(String playerID, String playerName) {
+
         String playerJSONPath = "./DarktaleConfig/player/" + playerID + ".json";
 
         if (!darktalePlayers.containsKey(playerID)) {
             DarktalePlayer player;
             File file = new File(playerJSONPath);
+
             if (file.exists()) {
                 player = DarktaleAPI.getAPI().getGSON().fromJson(new JSONFile(playerJSONPath).toString(), DarktalePlayer.class);
             } else {
                 player = new DarktalePlayer(playerID, playerName);
             }
+
+            darktalePlayers.put(player.getID(), player);
+            player.updatePrefix();
         }
+
         return darktalePlayers.get(playerID);
     }
 
@@ -132,17 +146,10 @@ public class DarktalePlayer {
     }
 
     public static void savePlayerStates() {
-        FileManager.makeDirectory("./DarktaleConfig/");
-        FileManager.makeDirectory("./DarktaleConfig/player");
-
         for (DarktalePlayer player : darktalePlayers.values()) {
-            if (player.isNew()) {
-                player.setNew(false);
-            }
-
-            String playerJSONPath = "./DarktaleConfig/player/" + player.getID() + ".json";
-            makeJSONFile(playerJSONPath);
-            FileManager.setFileText(playerJSONPath, DarktaleAPI.getAPI().getGSON().toJson(player));
+            player.saveState();
+            //TODO: Not sure if this messes with the for loop iteration
+            darktalePlayers.remove(player.getID());
         }
     }
 }
