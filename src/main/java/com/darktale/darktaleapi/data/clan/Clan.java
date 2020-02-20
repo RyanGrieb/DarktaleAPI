@@ -7,6 +7,7 @@ import com.darktale.darktaleapi.data.file.JSONFile;
 import com.darktale.darktaleapi.data.file.JSONManager;
 import static com.darktale.darktaleapi.data.file.JSONManager.makeJSONFile;
 import com.darktale.darktaleapi.data.player.DarktalePlayer;
+import com.darktale.darktaleapi.data.world.APILocation;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,6 +24,7 @@ public class Clan {
 
     //Note: the clanPlayers keys are player NAMES.
     private HashMap<String, ClanPlayer> clanPlayers;
+    private APILocation homeLocation;
     private String name;
 
     public Clan(String name) {
@@ -82,6 +84,10 @@ public class Clan {
         for (DarktalePlayer player : getOnlinePlayers()) {
             player.sendMessage(message);
         }
+    }
+
+    public void setHomeLocation(APILocation homeLocation) {
+        this.homeLocation = homeLocation;
     }
 
     public ClanRank getClanRank(String playerName) {

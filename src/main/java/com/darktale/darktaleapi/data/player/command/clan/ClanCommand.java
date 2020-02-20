@@ -185,6 +185,12 @@ public class ClanCommand extends APICommand {
                 return;
             }
 
+            if (arguments.length <= 2) {
+                player.sendMessage("Error: No player specifed");
+                printHelp(player);
+                return;
+            }
+
             if (player.getClanRank().value() < ClanRank.OFFICER.value()) {
                 player.sendMessage("Error: You don't have permission to kick players");
                 return;
@@ -194,6 +200,11 @@ public class ClanCommand extends APICommand {
 
             if (!player.getClan().inClan(targetPlayer)) {
                 player.sendMessage("Error: Player not in the clan");
+                return;
+            }
+
+            if (player.getName().equals(targetPlayer)) {
+                player.sendMessage("Error: You can't kick yourself");
                 return;
             }
 
