@@ -39,7 +39,7 @@ public class Clan {
             return;
         }
 
-        sendClanMessage(player.getName() + " has joined the clan");
+        sendClanMessage(player.getName() + " &7has joined the clan");
 
         player.setClan(this);
         clanPlayers.put(player.getName(), new ClanPlayer(player, ClanRank.RECRUIT, false));
@@ -132,6 +132,15 @@ public class Clan {
         return players;
     }
 
+    //Returns Green for friendly, Yellow for neutral, Red for enemy
+    public String getColor(DarktalePlayer player) {
+        return "&a";
+    }
+
+    public String getColoredName(DarktalePlayer player) {
+        return getColor(player) + name;
+    }
+
     //TODO: We might not need this method. It seems redundant /w the one below
     public static void createClan(DarktalePlayer player, String name) {
         Clan clan = new Clan(name);
@@ -156,7 +165,7 @@ public class Clan {
     }
 
     public static void destroyClan(String clanName) {
-        clans.remove(clanName, clans);
+        clans.remove(clanName);
         try {
             Files.deleteIfExists(Paths.get("./DarktaleConfig/clan/" + clanName + ".json"));
         } catch (Exception e) {

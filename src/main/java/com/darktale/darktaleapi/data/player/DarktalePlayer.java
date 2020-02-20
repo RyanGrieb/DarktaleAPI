@@ -121,6 +121,10 @@ public class DarktalePlayer {
         return Clan.getClan(clanName);
     }
 
+    public String getColor() {
+        return "&f";
+    }
+
     public static DarktalePlayer getPlayer(String playerID, String playerName) {
 
         String playerJSONPath = "./DarktaleConfig/player/" + playerID + ".json";

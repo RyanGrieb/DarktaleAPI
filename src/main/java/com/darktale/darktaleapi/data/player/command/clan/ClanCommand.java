@@ -31,7 +31,7 @@ public class ClanCommand extends APICommand {
         }
 
         if (!executeSubCommand(player, arguments[1], arguments)) {
-            player.sendMessage("Error: Subcommand not found");
+            player.sendMessage("&cError: &7Subcommand not found");
             printHelp(player);
             return;
         }
@@ -46,19 +46,24 @@ public class ClanCommand extends APICommand {
         @Override
         public void execute(DarktalePlayer player, String[] arguments) {
             if (player.getClan() != null) {
-                player.sendMessage("Error: You're already in a clan");
+                player.sendMessage("&cError: &7You're already in a clan");
                 return;
             }
 
             if (arguments.length <= 2) {
-                player.sendMessage("Error: No clan name specified");
+                player.sendMessage("&cError: &7No clan name specified");
                 printHelp(player);
                 return;
             }
             String clanName = arguments[2];
 
+            if (Clan.getClan(clanName) != null) {
+                player.sendMessage("&cError: &7A clan with that name already exists");
+                return;
+            }
+
             Clan.createClan(player, clanName);
-            DarktaleAPI.getAPI().eventHandler().callEvent(new APIBroadcastEvent(player.getName() + " created the clan: " + clanName));
+            DarktaleAPI.getAPI().eventHandler().callEvent(new APIBroadcastEvent(player.getName() + " &7created the clan: " + clanName));
         }
     }
 
@@ -71,12 +76,12 @@ public class ClanCommand extends APICommand {
         @Override
         public void execute(DarktalePlayer player, String[] arguments) {
             if (player.getClan() != null) {
-                player.sendMessage("Error: You're already in a clan");
+                player.sendMessage("&cError: &7You're already in a clan");
                 return;
             }
 
             if (arguments.length <= 2) {
-                player.sendMessage("Error: No clan name specifed");
+                player.sendMessage("&cError: &7No clan name specifed");
                 printHelp(player);
                 return;
             }
@@ -84,7 +89,7 @@ public class ClanCommand extends APICommand {
             Clan clan = Clan.getClan(arguments[2]);
 
             if (clan == null) {
-                player.sendMessage("Error: Clan not found");
+                player.sendMessage("&cError: &7Clan not found");
                 return;
             }
 
@@ -92,11 +97,11 @@ public class ClanCommand extends APICommand {
                 clan.addPlayer(player);
             } else {
                 //TODO: Check if the leader set the clan to open invitation
-                player.sendMessage("Error: You're not invited to join " + clan.getName());
+                player.sendMessage("&cError: &7You're not invited to join " + clan.getName());
                 return;
             }
 
-            player.sendMessage("Joined " + arguments[2]);
+            player.sendMessage("&7Joined " + clan.getColoredName(player));
         }
 
     }
@@ -109,42 +114,44 @@ public class ClanCommand extends APICommand {
 
         @Override
         public void execute(DarktalePlayer player, String[] arguments) {
-            if (player.getClan() == null) {
-                player.sendMessage("Error: You're not in a clan to invite members");
+            Clan clan = player.getClan();
+
+            if (clan == null) {
+                player.sendMessage("&cError: &7You're not in a clan to invite members");
                 return;
             }
 
             if (arguments.length <= 2) {
-                player.sendMessage("Error: No player specifed");
+                player.sendMessage("&cError: &7No player specifed");
                 printHelp(player);
                 return;
             }
 
             if (player.getClanRank().value() < ClanRank.OFFICER.value()) {
-                player.sendMessage("Error: You don't have permission to invite players");
+                player.sendMessage("&cError: &7You don't have permission to invite players");
                 return;
             }
 
             DarktalePlayer invitedPlayer = DarktalePlayer.getPlayerByName(arguments[2]);
             if (invitedPlayer == null) {
-                player.sendMessage("Error: You can only invite online players");
+                player.sendMessage("&cError: &7You can only invite online players");
                 return;
             }
 
-            if (player.getClan().isInvited(invitedPlayer.getName())) {
-                player.sendMessage("Error: You already invited " + invitedPlayer.getName() + " to the clan");
+            if (clan.isInvited(invitedPlayer.getName())) {
+                player.sendMessage("&cError: &7You already invited " + invitedPlayer.getName() + " to the clan");
                 return;
             }
 
-            if (player.getClan().inClan(invitedPlayer.getName())) {
-                player.sendMessage("Error: " + invitedPlayer.getName() + " is already in a clan");
+            if (clan.inClan(invitedPlayer.getName())) {
+                player.sendMessage("&cError: &7" + invitedPlayer.getName() + " &7is already in a clan");
                 return;
             }
 
             //Add the player name to the clans's invitation list
-            player.getClan().addInvitation(invitedPlayer.getName());
-            invitedPlayer.sendMessage("You have been invited to join " + player.getClan().getName());
-            player.sendMessage("Invited " + invitedPlayer.getName() + " to " + player.getClan().getName());
+            clan.addInvitation(invitedPlayer.getName());
+            invitedPlayer.sendMessage("&7You have been invited to join " + clan.getColoredName(player));
+            player.sendMessage("&7Invited " + invitedPlayer.getName() + "&7 to " + clan.getColoredName(player));
         }
 
     }
@@ -157,17 +164,17 @@ public class ClanCommand extends APICommand {
 
         @Override
         public void execute(DarktalePlayer player, String[] arguments) {
-            if (player.getClan() == null) {
-                player.sendMessage("Error: You're not in a clan leave");
+            Clan clan = player.getClan();
+
+            if (clan == null) {
+                player.sendMessage("&cError: &7You're not in a clan leave");
                 return;
             }
 
-            for (DarktalePlayer onlinePlayer : player.getClan().getOnlinePlayers()) {
-                onlinePlayer.sendMessage(player.getName() + " has left the clan");
-            }
+            player.sendMessage("&7You have left " + clan.getColoredName(player));
+            clan.removePlayer(player.getName());
 
-            player.sendMessage("You have left " + player.getClan().getName());
-            player.getClan().removePlayer(player.getName());
+            clan.sendClanMessage(player.getName() + " &7has left the clan");
         }
 
     }
@@ -180,41 +187,45 @@ public class ClanCommand extends APICommand {
 
         @Override
         public void execute(DarktalePlayer player, String[] arguments) {
-            if (player.getClan() == null) {
-                player.sendMessage("Error: You're not in a clan");
+            Clan clan = player.getClan();
+
+            if (clan == null) {
+                player.sendMessage("&cError: &7You're not in a clan");
                 return;
             }
 
             if (arguments.length <= 2) {
-                player.sendMessage("Error: No player specifed");
+                player.sendMessage("&cError: &7No player specifed");
                 printHelp(player);
                 return;
             }
 
             if (player.getClanRank().value() < ClanRank.OFFICER.value()) {
-                player.sendMessage("Error: You don't have permission to kick players");
+                player.sendMessage("&cError: &7You don't have permission to kick players");
                 return;
             }
 
             String targetPlayer = arguments[2];
 
-            if (!player.getClan().inClan(targetPlayer)) {
-                player.sendMessage("Error: Player not in the clan");
+            if (!clan.inClan(targetPlayer)) {
+                player.sendMessage("&cError: &7Player not in the clan");
                 return;
             }
 
             if (player.getName().equals(targetPlayer)) {
-                player.sendMessage("Error: You can't kick yourself");
+                player.sendMessage("&cError: &7You can't kick yourself");
                 return;
             }
 
-            player.getClan().removePlayer(targetPlayer);
+            clan.removePlayer(targetPlayer);
 
             if (DarktalePlayer.getPlayerByName(targetPlayer) != null) {
-                DarktalePlayer.getPlayerByName(targetPlayer).sendMessage("You were kicked from " + player.getClan().getName());
+                DarktalePlayer targetDarktalePlayer = DarktalePlayer.getPlayerByName(targetPlayer);
+
+                DarktalePlayer.getPlayerByName(targetPlayer).sendMessage("&7You were kicked from " + clan.getColoredName(player));
             }
 
-            player.getClan().sendClanMessage(targetPlayer + " was kicked from the clan");
+            clan.sendClanMessage(targetPlayer + " &7was kicked from the clan");
         }
 
     }
